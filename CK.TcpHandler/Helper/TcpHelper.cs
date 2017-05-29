@@ -1,11 +1,13 @@
-﻿using System;
+﻿using CK.Core;
+using CK.Monitoring;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CK.TcpHandler
+namespace CK.TcpHandler.Helper
 {
     internal class TcpHelper : IDisposable
     {
@@ -17,16 +19,24 @@ namespace CK.TcpHandler
             _client = new TcpClient();
         }
 
-        public async Task ConnectAsync(IPAddress adress, int port)
+        public async Task<bool> ConnectAsync(IPAddress adress, int port)
         {
             await _client.ConnectAsync(adress, port);
             _writer = _client.GetStream();
+
+            return true;
         }
 
         public async Task<bool> WriteAsync(string message)
         {
             return await WriteAsync(Encoding.ASCII.GetBytes(message));
         }
+
+        public async Task<bool> WriteAsync(IMulticastLogEntry e)
+        {
+            return await WriteAsync(BinaryHelper.AppendEntry(e));
+        }
+
 
         public async Task<bool> WriteAsync(Byte[] data)
         {
