@@ -24,9 +24,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CK.TcpHandler", "CK.TcpHand
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{B216DC8A-8720-47F4-B450-076AEFFB71D2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TCPServer", "Server\TCPServer\TCPServer.csproj", "{2230CD45-7BE7-4E3C-8317-CA8EAB892910}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Glouton.TCPServer", "Server\TCPServer\Glouton.TCPServer.csproj", "{2230CD45-7BE7-4E3C-8317-CA8EAB892910}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GloutonLucene", "Server\Lucene\GloutonLucene.csproj", "{12BDB351-D9CE-46E0-ACCB-C9BC64D8F2FD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Glouton.Lucene", "Server\Lucene\Glouton.Lucene.csproj", "{12BDB351-D9CE-46E0-ACCB-C9BC64D8F2FD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
