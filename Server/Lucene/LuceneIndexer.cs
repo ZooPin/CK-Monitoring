@@ -8,7 +8,7 @@ using Lucene.Net.Documents;
 using Lucene.Net.Analysis;
 using Lucene.Net.Util;
 using Lucene.Net.Analysis.Standard;
-
+using CK.Monitoring;
 
 namespace GloutonLucene
 {
@@ -45,32 +45,32 @@ namespace GloutonLucene
             return document;
         }
 
-        private Document getLogDocument(ILogEntry log)
-        {
-            Document document = new Document();
+        //private Document getLogDocument(ILogEntry log)
+        //{
+        //    Document document = new Document();
 
-            Field logType = new TextField("LogType", log.LogType, Field.Store.YES);
-            Field logLevel = new TextField("LogLevel", log.LogLevel, Field.Store.YES);
-            Field text = new TextField("Text", log.Text, Field.Store.YES);
-            Field tags = new TextField("Tags", log.Tags, Field.Store.YES);
-            Field logTime = new TextField("LogTime", log.LogTime, Field.Store.YES);
-            Field exception = new TextField("Exception", log.Exception, Field.Store.YES);
-            Field fileName = new TextField("FileName", log.FileName, Field.Store.YES);
-            Field lineNumber = new TextField("LineNumber", log.LineNumber, Field.Store.YES);
-            Field conclusions = new TextField("Conclusions", log.Conclusions, Field.Store.YES);
+        //    Field logType = new TextField("LogType", log.LogType, Field.Store.YES);
+        //    Field logLevel = new TextField("LogLevel", log.LogLevel, Field.Store.YES);
+        //    Field text = new TextField("Text", log.Text, Field.Store.YES);
+        //    Field tags = new TextField("Tags", log.Tags, Field.Store.YES);
+        //    Field logTime = new TextField("LogTime", log.LogTime, Field.Store.YES);
+        //    Field exception = new TextField("Exception", log.Exception, Field.Store.YES);
+        //    Field fileName = new TextField("FileName", log.FileName, Field.Store.YES);
+        //    Field lineNumber = new TextField("LineNumber", log.LineNumber, Field.Store.YES);
+        //    Field conclusions = new TextField("Conclusions", log.Conclusions, Field.Store.YES);
 
-            document.Add(logType);
-            document.Add(logLevel);
-            document.Add(text);
-            document.Add(tags);
-            document.Add(logTime);
-            document.Add(exception);
-            document.Add(fileName);
-            document.Add(lineNumber);
-            document.Add(conclusions);
+        //    document.Add(logType);
+        //    document.Add(logLevel);
+        //    document.Add(text);
+        //    document.Add(tags);
+        //    document.Add(logTime);
+        //    document.Add(exception);
+        //    document.Add(fileName);
+        //    document.Add(lineNumber);
+        //    document.Add(conclusions);
 
-            return document;
-        }
+        //    return document;
+        //}
 
         private void indexFile(FileInfo file)
         {

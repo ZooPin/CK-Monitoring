@@ -14,7 +14,6 @@ namespace CK.TcpHandler.Helper
         TcpClient _client;
         NetworkStream _writer;
 
-
         public NetworkStream Stream
         {
             get
@@ -57,7 +56,8 @@ namespace CK.TcpHandler.Helper
 
         public async Task<bool> WriteAsync(IMulticastLogEntry e)
         {
-            return await WriteAsync(BinaryHelper.AppendEntry(e));
+            byte[] log = BinaryHelper.IMulticastLogEntryToBinary(e);
+            return await WriteAsync(log);
         }
 
         public async Task<bool> WriteAsync(Byte[] data)
@@ -65,30 +65,21 @@ namespace CK.TcpHandler.Helper
             if (_writer == null) throw new NullReferenceException(nameof(_writer));
             if (!_writer.CanWrite) return false;
 
-            //data = ConstructSignature(data);
-
-            await _writer.WriteAsync(data, 0, data.Length);
+            await _writer.WriteAsync(ConstructHeader(data.Length), 0, 4);
+            if(data.Length > 0) await _writer.WriteAsync(data, 0, data.Length);
             await _writer.FlushAsync();
 
             return true;
         }
 
-        private Byte[] ConstructSignature(Byte[] data)
+        private byte[] ConstructHeader(int size)
         {
-            Byte[] lengthBytes = BitConverter.GetBytes(data.Length);
-            if (BitConverter.IsLittleEndian)
-                Array.Reverse(lengthBytes);
-
-            Byte[] result = new Byte[lengthBytes.Length + data.Length];
-            lengthBytes.CopyTo(result, 0);
-            data.CopyTo(result, lengthBytes.Length);
-
-            return result;
+            return new byte[] { (byte)(size >> 24), (byte)(size >> 16), (byte)(size >> 8), (byte)size };
         }
 
         public void Dispose()
         {
-            WriteAsync("@_close_@").Wait();
+            WriteAsync(new byte[0]).Wait();
             _client.GetStream().Flush();
             _client.GetStream().Dispose();
 

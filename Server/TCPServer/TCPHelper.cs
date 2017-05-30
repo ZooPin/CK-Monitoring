@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CK.Monitoring;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,8 +12,9 @@ namespace TCPServer
 {
     public class TCPHelper
     {
+        byte[] _buffer = new byte[4096];
 
-        public static async Task StartServer(int port)
+        public async Task StartServer(int port)
         {
             TcpListener listener = new TcpListener(IPAddress.Any, port);
             listener.Start();
@@ -25,23 +27,51 @@ namespace TCPServer
             }
         }
 
-        static Func<Task> StartServerCommunication(TcpClient client) => async () => await DoServerCommunication(client);
+        Func<Task> StartServerCommunication(TcpClient client) => async () => await DoServerCommunication(client);
 
-        static async Task DoServerCommunication(TcpClient client)
+        async Task DoServerCommunication(TcpClient client)
         {
+            List<byte[]> t = new List<byte[]>();
+            int byteRead;
+            int length;
             using (client)
-            using (StreamReader sr = new StreamReader(client.GetStream()))
+            using (NetworkStream networkStream = client.GetStream())
             {
-                while (true)
+                while(true)
                 {
-                    string s = await sr.ReadLineAsync();
-                    if (s == "@_close_@")
-                    {
-                        Console.WriteLine("Server: communication completed");
-                        break;
-                    }
-                    Console.WriteLine("Server: message received - ${0}$", s);
+                    await FillBuffer(networkStream, 4);
+                    length = (_buffer[0] << 24 | _buffer[1] << 16 | _buffer[2] << 8 | _buffer[3]);
+                    if (length == 0) return;
+                    await FillBuffer(networkStream, length);
+                    byte[] data = new byte[length];
+                    Array.Copy(_buffer, data, length);
+                    IMulticastLogEntry log = LoggerConverter(data);
                 }
+            }
+        }
+
+        IMulticastLogEntry LoggerConverter(byte[] data)
+        {
+            using (MemoryStream mem = new MemoryStream())
+            {
+                mem.Write(data, 0, data.Length);
+                mem.Seek(0, SeekOrigin.Begin);
+                using (var reader = new LogReader(mem, LogReader.CurrentStreamVersion, 4))
+                {
+                    reader.MoveNext();
+                    return reader.CurrentMulticast;
+                }
+            }
+        }
+
+        async Task FillBuffer(Stream stream, int size)
+        {
+            if (_buffer.Length < size) _buffer = new byte[size];
+            int totalReceived = 0;
+            int readByte = 0;
+            while(totalReceived < size && (readByte = await stream.ReadAsync(_buffer, totalReceived, size - totalReceived)) > 0)
+            {
+                totalReceived += readByte;
             }
         }
     }
