@@ -21,7 +21,7 @@ namespace CK.Monitoring.Tests
             Random r = new Random();
             IPAddress adress = IPAddress.Parse("127.0.0.1");
             GrandOutputConfiguration config = new GrandOutputConfiguration()
-                                                    .AddHandler(new TcpHandler.TcpSenderConfiguation { Adress = adress, Port = 3630 });
+                                                    .AddHandler(new TcpHandler.TcpSenderConfiguration() { Address = adress, Port = 3630 });
             using (GrandOutput g = new GrandOutput(config))
             {
                 DumpSampleLogs1(r, g);
@@ -57,7 +57,7 @@ namespace CK.Monitoring.Tests
             var m = new ActivityMonitor(false);
             g.EnsureGrandOutputClient(m);
 
-            m.Fatal().Send(ThrowExceptionWithInner(false), "An error occured");
+            //m.Fatal().Send(ThrowExceptionWithInner(false), "An error occured");
             m.SetTopic("This is a topic...");
             m.Trace().Send("a trace");
             m.Trace().Send("another one");
@@ -75,7 +75,7 @@ This MUST be correctly indented!"))
                 {
                     m.Info().Send("Info in info group.");
                     m.Info().Send("Another info in info group.");
-                    m.Error().Send(ThrowExceptionWithInner(true), "An error.");
+                    //m.Error().Send(ThrowExceptionWithInner(true), "An error.");
                     m.Warn().Send("A warning.");
                     m.Trace().Send("Something must be said.");
                     m.CloseGroup("Everything is in place.");
