@@ -14,6 +14,23 @@ namespace CK.TcpHandler.Helper
         TcpClient _client;
         NetworkStream _writer;
 
+
+        public NetworkStream Stream
+        {
+            get
+            {
+                return _writer;
+            }
+        }
+
+        public TcpClient Client
+        {
+            get
+            {
+                return _client;
+            }
+        }
+
         public TcpHelper()
         {
             _client = new TcpClient();
@@ -21,9 +38,15 @@ namespace CK.TcpHandler.Helper
 
         public async Task<bool> ConnectAsync(IPAddress adress, int port)
         {
-            await _client.ConnectAsync(adress, port);
-            _writer = _client.GetStream();
-
+            try
+            {
+                await _client.ConnectAsync(adress, port);
+                _writer = _client.GetStream();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
             return true;
         }
 
@@ -37,13 +60,12 @@ namespace CK.TcpHandler.Helper
             return await WriteAsync(BinaryHelper.AppendEntry(e));
         }
 
-
         public async Task<bool> WriteAsync(Byte[] data)
         {
             if (_writer == null) throw new NullReferenceException(nameof(_writer));
             if (!_writer.CanWrite) return false;
 
-            data = ConstructSignature(data);
+            //data = ConstructSignature(data);
 
             await _writer.WriteAsync(data, 0, data.Length);
             await _writer.FlushAsync();
@@ -67,8 +89,14 @@ namespace CK.TcpHandler.Helper
         public void Dispose()
         {
             WriteAsync("@_close_@").Wait();
+            _client.GetStream().Flush();
             _client.GetStream().Dispose();
-            _client.Dispose();
+
+            #if (NET451)
+                _client.Close();
+            #else
+                _client.Dispose();
+            #endif
         }
     }
 }

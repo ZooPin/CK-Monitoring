@@ -6,14 +6,18 @@ using System.Net;
 
 namespace CK.TcpHandler
 {
-    public class TcpSenderConfiguation : IHandlerConfiguration
+    public class TcpSenderConfiguration : IHandlerConfiguration
     {
-        public IPAddress Adress { get; set; }
+        public IPAddress Address { get; set; }
         public int Port { get; set; }
 
         public IHandlerConfiguration Clone()
         {
-            return this;
+            return new TcpSenderConfiguration()
+            {
+                Address = Address,
+                Port = Port
+            };
         }
     }
 }
