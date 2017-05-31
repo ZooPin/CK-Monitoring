@@ -44,7 +44,7 @@ namespace CK.TcpHandler.Helper
             }
             catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
             return true;
         }
@@ -66,10 +66,18 @@ namespace CK.TcpHandler.Helper
             if (!_writer.CanWrite) return false;
 
             await _writer.WriteAsync(ConstructHeader(data.Length), 0, 4);
-            if(data.Length > 0) await _writer.WriteAsync(data, 0, data.Length);
+            await _writer.WriteAsync(data, 0, data.Length);
             await _writer.FlushAsync();
 
             return true;
+        }
+
+        async Task SendDisconnect()
+        {
+            if (_writer == null) throw new NullReferenceException(nameof(_writer));
+            if (!_writer.CanWrite) return;
+
+            await _writer.WriteAsync(ConstructHeader(0), 0, 4);
         }
 
         private byte[] ConstructHeader(int size)
@@ -79,7 +87,7 @@ namespace CK.TcpHandler.Helper
 
         public void Dispose()
         {
-            WriteAsync(new byte[0]).Wait();
+            SendDisconnect().Wait();
             _client.GetStream().Flush();
             _client.GetStream().Dispose();
 

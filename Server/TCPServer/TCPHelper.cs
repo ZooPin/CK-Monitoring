@@ -1,4 +1,6 @@
-﻿using CK.Monitoring;
+﻿using CK.Core;
+using CK.Monitoring;
+using CK.TcpHandler.Configuration.Protocol;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -32,7 +34,6 @@ namespace TCPServer
         async Task DoServerCommunication(TcpClient client)
         {
             List<byte[]> t = new List<byte[]>();
-            int byteRead;
             int length;
             using (client)
             using (NetworkStream networkStream = client.GetStream())
