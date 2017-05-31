@@ -5,6 +5,7 @@ using System.Text;
 using System.Diagnostics;
 using CK.Core;
 using CK.Text;
+using System.IO;
 
 namespace CK.TcpHandler.Helper
 {
@@ -109,6 +110,18 @@ namespace CK.TcpHandler.Helper
                 }
             }
             return Encoding.ASCII.GetBytes(builder.ToString());
+        }
+
+        public static byte[] IMulticastLogEntryToBinary(IMulticastLogEntry log)
+        {
+            using (var mem = new MemoryStream())
+            using (var w = new CKBinaryWriter(mem))
+            {
+                log.WriteLogEntry(w);
+                w.Flush();
+
+                return mem.ToArray();
+            }
         }
     }
 }

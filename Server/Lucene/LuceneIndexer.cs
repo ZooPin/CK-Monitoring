@@ -10,7 +10,6 @@ using Lucene.Net.Util;
 using Lucene.Net.Analysis.Standard;
 using CK.Monitoring;
 
-
 namespace GloutonLucene
 {
     class LuceneIndexer
@@ -46,9 +45,9 @@ namespace GloutonLucene
             return document;
         }
 
-        private Document getLogDocument(ILogEntry log)
-        {
-            Document document = new Document();
+        //private Document getLogDocument(ILogEntry log)
+        //{
+        //    Document document = new Document();
 
             if (log.LogType == LogEntryType.Line || log.LogType == LogEntryType.OpenGroup)
             {
@@ -85,8 +84,8 @@ namespace GloutonLucene
 
             document.Add(logType);
 
-            return document;
-        }
+        //    return document;
+        //}
 
         private void indexFile(FileInfo file)
         {
