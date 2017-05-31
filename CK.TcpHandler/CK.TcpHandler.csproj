@@ -1,8 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <Import Project="..\Common\Shared.props" />
+
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.3;net451</TargetFrameworks>
-    <SignAssembly>True</SignAssembly>
+    <TargetFrameworks>netstandard1.6;net461</TargetFrameworks>
+    <SignAssembly>False</SignAssembly>
     <DelaySign>True</DelaySign>
     <AssemblyOriginatorKeyFile>SharedKey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
