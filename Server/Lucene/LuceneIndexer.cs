@@ -12,7 +12,7 @@ using CK.Monitoring;
 
 namespace GloutonLucene
 {
-    class LuceneIndexer
+    public class LuceneIndexer
     {
         private IndexWriter _writer;
 
@@ -29,25 +29,9 @@ namespace GloutonLucene
             _writer.Dispose();
         }
 
-        private Document getDocument(FileInfo file)
+        private Document GetLogDocument(ILogEntry log)
         {
             Document document = new Document();
-            //index file contents and name
-            Field contentField = new TextField(LuceneConstant.Content, new StreamReader(file.Open(FileMode.Open)));
-            Field fileNameField = new TextField(LuceneConstant.FileName, file.Name, Field.Store.YES);
-            //index file path
-            Field filePahtField = new TextField(LuceneConstant.FilePath, file.FullName, Field.Store.YES);
-
-            document.Add(contentField);
-            document.Add(fileNameField);
-            document.Add(filePahtField);
-
-            return document;
-        }
-
-        //private Document getLogDocument(ILogEntry log)
-        //{
-        //    Document document = new Document();
 
             if (log.LogType == LogEntryType.Line || log.LogType == LogEntryType.OpenGroup)
             {
@@ -84,26 +68,13 @@ namespace GloutonLucene
 
             document.Add(logType);
 
-        //    return document;
-        //}
-
-        private void indexFile(FileInfo file)
-        {
-            Console.WriteLine("Indexing : " + file.FullName);
-            Document document = getDocument(file);
-            _writer.AddDocument(document);
+            return document;
         }
 
-        public int CreateIndex (string dataDirPath)
+        public void IndexLog(ILogEntry log)
         {
-            FileInfo[] files = new DirectoryInfo(dataDirPath).GetFiles();
-
-            foreach(FileInfo file in files)
-            {
-                if (file.Extension == ".txt") indexFile(file);
-            }
-
-            return _writer.NumDocs; 
+            Document document = GetLogDocument(log);
+            _writer.AddDocument(document);
         }
     }
 }

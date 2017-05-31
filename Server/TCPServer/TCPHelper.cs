@@ -7,12 +7,14 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using GloutonLucene;
 
 namespace TCPServer
 {
     public class TCPHelper
     {
         byte[] _buffer = new byte[4096];
+        LuceneIndexer _indexer = new LuceneIndexer("C:\\Dev\\CK-Monitoring-Bis\\CK-Monitoring\\Server\\Lucene\\Index");
 
         public async Task StartServer(int port)
         {
@@ -46,6 +48,7 @@ namespace TCPServer
                     byte[] data = new byte[length];
                     Array.Copy(_buffer, data, length);
                     IMulticastLogEntry log = LoggerConverter(data);
+                    _indexer.IndexLog(log);
                 }
             }
         }
