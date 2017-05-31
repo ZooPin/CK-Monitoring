@@ -11,10 +11,10 @@ namespace CK.TcpHandler
 {
     public class TcpSender : IGrandOutputHandler
     {
-        TcpSenderConfiguation _config;
+        TcpSenderConfiguration _config;
         TcpHelper _tcp;
 
-        public TcpSender (TcpSenderConfiguation config)
+        public TcpSender (TcpSenderConfiguration config)
         {
             if (config == null) throw new ArgumentNullException(nameof(config));
             _config = config;
@@ -23,19 +23,19 @@ namespace CK.TcpHandler
 
         public bool Activate(IActivityMonitor m)
         {
-            using (m.OpenGroup(LogLevel.Trace, $"Initializing Tcp handler (Adress = {_config.Adress}, Port {_config.Port}).", null))
+            using (m.OpenGroup(LogLevel.Trace, $"Initializing Tcp handler (Address = {_config.Address}, Port {_config.Port}).", null))
             {
-                return _tcp.ConnectAsync(_config.Adress, _config.Port).Result;
+                return _tcp.ConnectAsync(_config.Address, _config.Port).Result;
             }
         }
 
         public bool ApplyConfiguration(IActivityMonitor m, IHandlerConfiguration c)
         {
-            TcpSenderConfiguation cF = c as TcpSenderConfiguation;
-            if (cF == null || cF.Adress != _config.Adress) return false;
+            TcpSenderConfiguration cF = c as TcpSenderConfiguration;
+            if (cF == null || cF.Address != _config.Address) return false;
             _config = cF;
             _tcp.Dispose();
-            _tcp.ConnectAsync(_config.Adress, _config.Port).Wait();
+            _tcp.ConnectAsync(_config.Address, _config.Port).Wait();
 
             return true;
         }
