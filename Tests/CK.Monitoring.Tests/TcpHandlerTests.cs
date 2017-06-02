@@ -57,6 +57,26 @@ namespace CK.Monitoring.Tests
             }
         }
 
+        [Test]
+        public void protocol_block_log_serialized_write_read()
+        {
+            byte[] arrByte = new byte[10] { 255, 255, 255, 255, 255, 255, 255, 255, 255, 255 };
+            ILogBlock block = new LogBlock() { Type = LogType.CKMonitoring, Log = arrByte };
+
+            using (MemoryStream mem = new MemoryStream())
+            using (CKBinaryWriter w = new CKBinaryWriter(mem))
+            {
+                block.WriteLogBlock(w);
+                mem.Seek(0, SeekOrigin.Begin);
+                using (CKBinaryReader r = new CKBinaryReader(mem))
+                {
+                    ILogBlock blockReceived = LogBlock.Read(r);
+                    blockReceived.Type.Should().Be(block.Type);
+                    blockReceived.Log.ShouldAllBeEquivalentTo(block.Log);
+                }
+            }
+        }
+
         static void DumpSampleLogs1(Random r, GrandOutput g)
         {
             var m = new ActivityMonitor(false);
