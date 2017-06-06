@@ -1,5 +1,6 @@
 ﻿using CK.Core;
 using CK.Monitoring;
+using CK.TcpHandler.Configuration.Protocol;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -39,8 +40,10 @@ namespace CK.TcpHandler.Helper
         {
             try
             {
+                int appId = 122;
                 await _client.ConnectAsync(adress, port);
                 _writer = _client.GetStream();
+                await WriteAsync(BlockConstructor.Open(appId));
             }
             catch (Exception ex)
             {
@@ -57,6 +60,7 @@ namespace CK.TcpHandler.Helper
         public async Task<bool> WriteAsync(IMulticastLogEntry e)
         {
             byte[] log = BinaryHelper.IMulticastLogEntryToBinary(e);
+            BlockConstructor.Log(LogType.CKMonitoring, log);
             return await WriteAsync(log);
         }
 
@@ -90,12 +94,7 @@ namespace CK.TcpHandler.Helper
             SendDisconnect().Wait();
             _client.GetStream().Flush();
             _client.GetStream().Dispose();
-
-            #if (NET451)
-                _client.Close();
-            #else
-                _client.Dispose();
-            #endif
+            _client.Dispose();
         }
     }
 }

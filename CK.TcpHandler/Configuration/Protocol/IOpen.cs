@@ -11,6 +11,6 @@ namespace CK.TcpHandler.Configuration.Protocol
         int AppId { get; set; }
         int StreamVersion { get; set; } 
         Dictionary<string, string> Info { get; set; }
-        void WriteOpen(CKBinaryWriter w);
+        void WriteOpenBlock(CKBinaryWriter w);
     }
 }

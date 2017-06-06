@@ -1,4 +1,5 @@
 ﻿using CK.Core;
+using CK.Monitoring;
 using CK.TcpHandler.Configuration.Protocol;
 using System;
 using System.Collections.Generic;
@@ -13,12 +14,23 @@ namespace CK.TcpHandler.Helper
         public static byte[] Open (int appId)
         {
             using (MemoryStream mem = new MemoryStream())
+            using (CKBinaryWriter writer = new CKBinaryWriter(mem))
             {
-                OpenInfo info = new OpenInfo() { AppId = appId, BaseDirectory = AppContext.BaseDirectory, StreamVersion = 7, Info = new Dictionary<string, string>() };
-                CKBinaryWriter writer = new CKBinaryWriter(mem);
+                OpenInfo info = new OpenInfo() { AppId = appId, BaseDirectory = AppContext.BaseDirectory, StreamVersion = LogReader.CurrentStreamVersion, Info = new Dictionary<string, string>() };
+                info.WriteOpenBlock(writer);
+                return mem.ToArray();
             }
-            throw new NotImplementedException();
         }
 
+        public static byte[] Log(LogType type, byte[] logArray)
+        {
+            using (MemoryStream mem = new MemoryStream())
+            using (CKBinaryWriter writer = new CKBinaryWriter(mem))
+            {
+                LogBlock log = new LogBlock() { Log = logArray, Type = type };
+                log.WriteLogBlock(writer);
+                return mem.ToArray();
+            }
+        }
     }
 }

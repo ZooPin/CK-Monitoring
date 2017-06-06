@@ -12,7 +12,7 @@ namespace CK.TcpHandler.Configuration.Protocol
         public int StreamVersion { get; set; }
         public Dictionary<string, string> Info { get; set; }
 
-        public void WriteOpen(CKBinaryWriter w)
+        public void WriteOpenBlock(CKBinaryWriter w)
         {
             w.Write(BaseDirectory);
             w.Write(AppId);
