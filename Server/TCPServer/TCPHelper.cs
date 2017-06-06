@@ -11,7 +11,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TCPServer
+namespace Glouton.TCPServer
 {
     public class TCPHelper
     {
@@ -35,53 +35,21 @@ namespace TCPServer
 
         async Task DoServerCommunication(TcpClient client)
         {
-            List<byte[]> t = new List<byte[]>();
             using (client)
             using (NetworkStream networkStream = client.GetStream())
             {
-                OpenBlockReader(await ReadBlock(networkStream));
+                BlockReceiver.OpenBlockReader(this, await ReadBlock(networkStream));
                 while(true)
                 {
-                    IMulticastLogEntry log = LoggerConverter(await ReadBlock(networkStream));
+                    await BlockReceiver.LogBlockReader(await ReadBlock(networkStream));
                 }
-            }
-        }
-
-        IMulticastLogEntry LoggerConverter(byte[] data)
-        {
-            using (MemoryStream mem = new MemoryStream())
-            {
-                mem.Write(data, 0, data.Length);
-                mem.Seek(0, SeekOrigin.Begin);
-                using (var reader = new LogReader(mem, LogReader.CurrentStreamVersion, 4))
-                {
-                    reader.MoveNext();
-                    return reader.CurrentMulticast;
-                }
-            }
-        }
-
-        void OpenBlockReader (byte[] block)
-        {
-            OpenInfo = BlockReader.Open(block);
-        }
-
-        void LogBlockReader (byte[] block)
-        {
-            using (MemoryStream mem = new MemoryStream())
-            using (CKBinaryReader r = new CKBinaryReader(mem))
-            {
-                ILogBlock logBlock = LogBlock.Read(r);
-                if (logBlock.Type == LogType.CKMonitoring)
-                    LoggerConverter(logBlock.Log);
             }
         }
 
         async Task<byte[]> ReadBlock(Stream s)
         {
-            int length;
             await FillBuffer(s, 4);
-            length = (_buffer[0] << 24 | _buffer[1] << 16 | _buffer[2] << 8 | _buffer[3]);
+            int length = (_buffer[0] << 24 | _buffer[1] << 16 | _buffer[2] << 8 | _buffer[3]);
             if (length == 0) return new byte[0];
             await FillBuffer(s, length);
             byte[] data = new byte[length];
