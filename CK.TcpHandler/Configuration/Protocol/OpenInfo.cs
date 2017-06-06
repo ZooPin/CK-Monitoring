@@ -14,6 +14,7 @@ namespace CK.TcpHandler.Configuration.Protocol
 
         public void WriteOpenBlock(CKBinaryWriter w)
         {
+            w.Write('O');
             w.Write(BaseDirectory);
             w.Write(AppId);
             w.Write(StreamVersion);
@@ -29,6 +30,8 @@ namespace CK.TcpHandler.Configuration.Protocol
         {
             IOpen t = new OpenInfo();
             int nValue;
+            if (r.ReadChar() != 'O')
+                throw new NotSupportedException();
             t.Info = new Dictionary<string, string>();
             t.BaseDirectory = r.ReadString();
             t.AppId = r.ReadInt32();

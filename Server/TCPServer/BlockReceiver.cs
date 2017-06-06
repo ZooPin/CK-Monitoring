@@ -12,32 +12,26 @@ namespace Glouton.TCPServer
 {
     public static class BlockReceiver
     {
-        public static async Task LogBlockReader(byte[] block)
+        public static async Task<bool> LogBlockReader(byte[] block)
         {
-            using (MemoryStream mem = new MemoryStream())
-            {
-                await mem.WriteAsync(block, 0, block.Length);
-                mem.Seek(0, SeekOrigin.Begin);
-                using (CKBinaryReader r = new CKBinaryReader(mem))
-                {
-                    ILogBlock logBlock = LogBlock.Read(r);
-                    if (logBlock.Type == LogType.CKMonitoring)
-                        LoggerConverter(logBlock.Log);
+            if (block.Length == 0) return false;
+            ILogBlock logBlock = await BlockReader.Log(block);
+            if (logBlock.Type == LogType.CKMonitoring)
+                LoggerConverter(logBlock.Log);
 
-                    switch (logBlock.Type)
-                    {
-                        case LogType.CKMonitoring:
-                            LoggerConverter(logBlock.Log);
-                            break;
-                        default: throw new NotImplementedException();
-                    }
-                }
+            switch (logBlock.Type)
+            {
+                case LogType.CKMonitoring:
+                    LoggerConverter(logBlock.Log);
+                    break;
+                default: throw new NotImplementedException();
             }
+            return true;
         }
 
-        public static void OpenBlockReader(TCPHelper h, byte[] block)
+        public static async Task OpenBlockReader(TCPHelper h, byte[] block)
         {
-            h.OpenInfo = BlockReader.Open(block);
+            h.OpenInfo =  await BlockReader.Open(block);
         }
 
         public static IMulticastLogEntry LoggerConverter(byte[] data)

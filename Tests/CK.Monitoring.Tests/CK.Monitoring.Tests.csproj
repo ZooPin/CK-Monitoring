@@ -10,6 +10,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\CK.Monitoring\CK.Monitoring.csproj" />
     <ProjectReference Include="..\..\CK.TcpHandler\CK.TcpHandler.csproj" />
+    <ProjectReference Include="..\..\Server\TCPServer\Glouton.TCPServer.csproj" />
   </ItemGroup>
 
   <ItemGroup>

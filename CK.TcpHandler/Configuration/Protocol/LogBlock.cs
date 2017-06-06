@@ -12,6 +12,7 @@ namespace CK.TcpHandler.Configuration.Protocol
 
         public void WriteLogBlock(CKBinaryWriter w)
         {
+            w.Write('L');
             w.Write((int)Type);
             w.Write(Log.Length);
             w.Write(Log);
@@ -20,6 +21,8 @@ namespace CK.TcpHandler.Configuration.Protocol
         public static ILogBlock Read (CKBinaryReader r)
         {
             ILogBlock block = new LogBlock();
+            if (r.ReadChar() != 'L')
+                throw new NotSupportedException();
             block.Type = (LogType)r.ReadInt32();
             int length = r.ReadInt32();
             block.Log = r.ReadBytes(length);

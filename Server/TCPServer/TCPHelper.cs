@@ -38,11 +38,9 @@ namespace Glouton.TCPServer
             using (client)
             using (NetworkStream networkStream = client.GetStream())
             {
-                BlockReceiver.OpenBlockReader(this, await ReadBlock(networkStream));
-                while(true)
-                {
-                    await BlockReceiver.LogBlockReader(await ReadBlock(networkStream));
-                }
+                await BlockReceiver.OpenBlockReader(this, await ReadBlock(networkStream));
+                while 
+                    (await BlockReceiver.LogBlockReader(await ReadBlock(networkStream)));
             }
         }
 

@@ -2,6 +2,7 @@
 using CK.TcpHandler.Configuration.Protocol;
 using FluentAssertions;
 using NUnit.Framework;
+using Glouton.TCPServer;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -44,7 +45,7 @@ namespace CK.Monitoring.Tests
             using (MemoryStream mem = new MemoryStream())
             using (CKBinaryWriter writer = new CKBinaryWriter(mem))
             {
-                block.WriteOpen(writer);
+                block.WriteOpenBlock(writer);
                 mem.Seek(0, SeekOrigin.Begin);
                 using (CKBinaryReader reader = new CKBinaryReader(mem))
                 {

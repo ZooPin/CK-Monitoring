@@ -60,8 +60,7 @@ namespace CK.TcpHandler.Helper
         public async Task<bool> WriteAsync(IMulticastLogEntry e)
         {
             byte[] log = BinaryHelper.IMulticastLogEntryToBinary(e);
-            BlockConstructor.Log(LogType.CKMonitoring, log);
-            return await WriteAsync(log);
+            return await WriteAsync(BlockConstructor.Log(LogType.CKMonitoring, log));
         }
 
         public async Task<bool> WriteAsync(Byte[] data)
