@@ -9,10 +9,11 @@ using Lucene.Net.Analysis;
 using Lucene.Net.Util;
 using Lucene.Net.Analysis.Standard;
 using CK.Monitoring;
+using CK.Core;
 
 namespace GloutonLucene
 {
-    public class LuceneIndexer
+    public class LuceneIndexer : IDisposable
     {
         private IndexWriter _writer;
 
@@ -22,11 +23,6 @@ namespace GloutonLucene
 
             _writer = new IndexWriter(indexDirectory, new IndexWriterConfig(LuceneVersion.LUCENE_48,
                 new StandardAnalyzer(LuceneVersion.LUCENE_48)));
-        }
-
-        public void close()
-        {
-            _writer.Dispose();
         }
 
         private Document GetLogDocument(ILogEntry log)
@@ -56,12 +52,19 @@ namespace GloutonLucene
 
             else if (log.LogType == LogEntryType.CloseGroup)
             {
+                StringBuilder builder = new StringBuilder();
+                foreach(ActivityLogGroupConclusion conclusion in log.Conclusions)
+                {
+                    builder.Append(conclusion.Text + "\n");
+                }
+                Console.WriteLine("conclusion : " + builder.ToString());
                 Field logLevel = new TextField("LogLevel", log.LogLevel.ToString(), Field.Store.YES);
-                Field conclusions = new TextField("Conclusions", log.Conclusions.ToString(), Field.Store.YES);
+                Field conclusions = new TextField("Conclusions", builder.ToString(), Field.Store.YES);
                 Field logTime = new TextField("LogTime", log.LogTime.TimeUtc.ToString(), Field.Store.YES);
 
                 document.Add(logLevel);
                 document.Add(logTime);
+                document.Add(conclusions);
             }
 
             Field logType = new TextField("LogType", log.LogType.ToString(), Field.Store.YES);
@@ -75,6 +78,11 @@ namespace GloutonLucene
         {
             Document document = GetLogDocument(log);
             _writer.AddDocument(document);
+        }
+
+        public void Dispose()
+        {
+            _writer.Dispose();
         }
     }
 }

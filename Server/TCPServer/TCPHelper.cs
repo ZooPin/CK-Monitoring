@@ -14,7 +14,6 @@ namespace TCPServer
     public class TCPHelper
     {
         byte[] _buffer = new byte[4096];
-        LuceneIndexer _indexer = new LuceneIndexer("C:\\Dev\\CK-Monitoring-Bis\\CK-Monitoring\\Server\\Lucene\\Index");
 
         public async Task StartServer(int port)
         {
@@ -38,8 +37,9 @@ namespace TCPServer
             int length;
             using (client)
             using (NetworkStream networkStream = client.GetStream())
+            using (LuceneIndexer _indexer = new LuceneIndexer("C:\\Dev\\CK-Monitoring-Bis\\CK-Monitoring\\Server\\Lucene\\Index"))
             {
-                while(true)
+                while (true)
                 {
                     await FillBuffer(networkStream, 4);
                     length = (_buffer[0] << 24 | _buffer[1] << 16 | _buffer[2] << 8 | _buffer[3]);
@@ -48,6 +48,7 @@ namespace TCPServer
                     byte[] data = new byte[length];
                     Array.Copy(_buffer, data, length);
                     IMulticastLogEntry log = LoggerConverter(data);
+
                     _indexer.IndexLog(log);
                 }
             }
@@ -72,7 +73,7 @@ namespace TCPServer
             if (_buffer.Length < size) _buffer = new byte[size];
             int totalReceived = 0;
             int readByte = 0;
-            while(totalReceived < size && (readByte = await stream.ReadAsync(_buffer, totalReceived, size - totalReceived)) > 0)
+            while (totalReceived < size && (readByte = await stream.ReadAsync(_buffer, totalReceived, size - totalReceived)) > 0)
             {
                 totalReceived += readByte;
             }
