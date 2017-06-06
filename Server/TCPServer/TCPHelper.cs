@@ -1,4 +1,7 @@
-﻿using CK.Monitoring;
+﻿using CK.Core;
+using CK.Monitoring;
+using CK.TcpHandler.Configuration.Protocol;
+using CK.TcpHandler.Helper;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,11 +12,12 @@ using System.Text;
 using System.Threading.Tasks;
 using GloutonLucene;
 
-namespace TCPServer
+namespace Glouton.TCPServer
 {
     public class TCPHelper
     {
         byte[] _buffer = new byte[4096];
+        public IOpen OpenInfo { get; set; }
 
         public async Task StartServer(int port)
         {
@@ -32,40 +36,28 @@ namespace TCPServer
 
         async Task DoServerCommunication(TcpClient client)
         {
-            List<byte[]> t = new List<byte[]>();
-            int byteRead;
-            int length;
             using (client)
             using (NetworkStream networkStream = client.GetStream())
             using (LuceneIndexer _indexer = new LuceneIndexer("C:\\Dev\\CK-Monitoring-Bis\\CK-Monitoring\\Server\\Lucene\\Index"))
             {
-                while (true)
-                {
-                    await FillBuffer(networkStream, 4);
-                    length = (_buffer[0] << 24 | _buffer[1] << 16 | _buffer[2] << 8 | _buffer[3]);
-                    if (length == 0) return;
-                    await FillBuffer(networkStream, length);
-                    byte[] data = new byte[length];
-                    Array.Copy(_buffer, data, length);
-                    IMulticastLogEntry log = LoggerConverter(data);
+                await BlockReceiver.OpenBlockReader(this, await ReadBlock(networkStream));
+                while 
+                    (await BlockReceiver.LogBlockReader(await ReadBlock(networkStream)));
 
                     _indexer.IndexLog(log);
-                }
             }
         }
 
-        IMulticastLogEntry LoggerConverter(byte[] data)
+        async Task<byte[]> ReadBlock(Stream s)
         {
-            using (MemoryStream mem = new MemoryStream())
-            {
-                mem.Write(data, 0, data.Length);
-                mem.Seek(0, SeekOrigin.Begin);
-                using (var reader = new LogReader(mem, LogReader.CurrentStreamVersion, 4))
-                {
-                    reader.MoveNext();
-                    return reader.CurrentMulticast;
-                }
-            }
+            await FillBuffer(s, 4);
+            int length = (_buffer[0] << 24 | _buffer[1] << 16 | _buffer[2] << 8 | _buffer[3]);
+            if (length == 0) return new byte[0];
+            await FillBuffer(s, length);
+            byte[] data = new byte[length];
+            Array.Copy(_buffer, data, length);
+
+            return data;
         }
 
         async Task FillBuffer(Stream stream, int size)

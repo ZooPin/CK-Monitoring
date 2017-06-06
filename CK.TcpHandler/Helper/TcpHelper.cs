@@ -1,5 +1,6 @@
 ﻿using CK.Core;
 using CK.Monitoring;
+using CK.TcpHandler.Configuration.Protocol;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -39,12 +40,14 @@ namespace CK.TcpHandler.Helper
         {
             try
             {
+                int appId = 122;
                 await _client.ConnectAsync(adress, port);
                 _writer = _client.GetStream();
+                await WriteAsync(BlockConstructor.Open(appId));
             }
             catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
             return true;
         }
@@ -57,7 +60,7 @@ namespace CK.TcpHandler.Helper
         public async Task<bool> WriteAsync(IMulticastLogEntry e)
         {
             byte[] log = BinaryHelper.IMulticastLogEntryToBinary(e);
-            return await WriteAsync(log);
+            return await WriteAsync(BlockConstructor.Log(LogType.CKMonitoring, log));
         }
 
         public async Task<bool> WriteAsync(Byte[] data)
@@ -66,10 +69,18 @@ namespace CK.TcpHandler.Helper
             if (!_writer.CanWrite) return false;
 
             await _writer.WriteAsync(ConstructHeader(data.Length), 0, 4);
-            if(data.Length > 0) await _writer.WriteAsync(data, 0, data.Length);
+            await _writer.WriteAsync(data, 0, data.Length);
             await _writer.FlushAsync();
 
             return true;
+        }
+
+        async Task SendDisconnect()
+        {
+            if (_writer == null) throw new NullReferenceException(nameof(_writer));
+            if (!_writer.CanWrite) return;
+
+            await _writer.WriteAsync(ConstructHeader(0), 0, 4);
         }
 
         private byte[] ConstructHeader(int size)
@@ -79,15 +90,10 @@ namespace CK.TcpHandler.Helper
 
         public void Dispose()
         {
-            WriteAsync(new byte[0]).Wait();
+            SendDisconnect().Wait();
             _client.GetStream().Flush();
             _client.GetStream().Dispose();
-
-            #if (NET451)
-                _client.Close();
-            #else
-                _client.Dispose();
-            #endif
+            _client.Dispose();
         }
     }
 }

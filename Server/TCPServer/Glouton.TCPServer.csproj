@@ -4,7 +4,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp1.1</TargetFramework>
+    <TargetFrameworks>net461;netcoreapp1.1</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,6 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\CK.Monitoring\CK.Monitoring.csproj" />
     <ProjectReference Include="..\Lucene\Glouton.Lucene.csproj" />
+    <ProjectReference Include="..\..\CK.TcpHandler\CK.TcpHandler.csproj" />
   </ItemGroup>
 
 </Project>
