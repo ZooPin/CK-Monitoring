@@ -57,7 +57,6 @@ namespace GloutonLucene
                 {
                     builder.Append(conclusion.Text + "\n");
                 }
-                Console.WriteLine("conclusion : " + builder.ToString());
                 Field logLevel = new TextField("LogLevel", log.LogLevel.ToString(), Field.Store.YES);
                 Field conclusions = new TextField("Conclusions", builder.ToString(), Field.Store.YES);
                 Field logTime = new TextField("LogTime", log.LogTime.TimeUtc.ToString(), Field.Store.YES);
