@@ -26,7 +26,7 @@ namespace Glouton.TCPServer
             while (true)
             {
                 TcpClient client = await listener.AcceptTcpClientAsync();
-                Console.WriteLine("Server: client accepted");
+                Console.WriteLine("Server: [client] [accepted]");
                 await Task.Factory.StartNew(StartServerCommunication(client));
             }
         }
@@ -42,6 +42,7 @@ namespace Glouton.TCPServer
                 while 
                     (await BlockReceiver.LogBlockReader(await ReadBlock(networkStream)));
             }
+            Console.WriteLine("Server: [client][disconnect]");
         }
 
         async Task<byte[]> ReadBlock(Stream s)

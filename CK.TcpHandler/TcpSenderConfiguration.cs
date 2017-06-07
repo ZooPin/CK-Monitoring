@@ -10,13 +10,15 @@ namespace CK.TcpHandler
     {
         public IPAddress Address { get; set; }
         public int Port { get; set; }
+        public bool HandleCriticalErrors { get; set; }
 
         public IHandlerConfiguration Clone()
         {
             return new TcpSenderConfiguration()
             {
                 Address = Address,
-                Port = Port
+                Port = Port,
+                HandleCriticalErrors = HandleCriticalErrors
             };
         }
     }

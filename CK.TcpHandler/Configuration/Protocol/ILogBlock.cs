@@ -9,7 +9,7 @@ namespace CK.TcpHandler.Configuration.Protocol
     {
         Critical,
         CKMonitoring,
-        DotNetLogger
+        External
     }
 
     public interface ILogBlock

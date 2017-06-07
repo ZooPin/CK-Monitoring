@@ -22,7 +22,12 @@ namespace Glouton.TCPServer
             switch (logBlock.Type)
             {
                 case LogType.CKMonitoring:
-                    LoggerConverter(logBlock.Log);
+                    LoggerConverter(logBlock.Log); // IMultiCastEntry instance
+                    Console.WriteLine("Server: [Received][Log.CKMonitoring]");
+                    break;
+                case LogType.Critical:
+                    ReadCritical(logBlock); // string with critical log
+                    Console.WriteLine($"Server: [Received][Log.Critical]");
                     break;
                 default: throw new NotImplementedException();
             }
@@ -46,6 +51,11 @@ namespace Glouton.TCPServer
                     return reader.CurrentMulticast;
                 }
             }
+        }
+
+        public static string ReadCritical (ILogBlock log)
+        {
+            return Encoding.Unicode.GetString(log.Log);
         }
     }
 }

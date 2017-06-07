@@ -32,5 +32,10 @@ namespace CK.TcpHandler.Helper
                 return mem.ToArray();
             }
         }
+
+        public static byte[] Log(LogType type, string t)
+        {
+            return Log(type, Encoding.Unicode.GetBytes(t));
+        }
     }
 }
