@@ -106,7 +106,7 @@ namespace CK.Monitoring.Tests
             var m = new ActivityMonitor(false);
             g.EnsureGrandOutputClient(m);
 
-            //m.Fatal().Send(ThrowExceptionWithInner(false), "An error occured");
+            m.Fatal().Send(ThrowExceptionWithInner(false), "An error occured");
             m.SetTopic("This is a topic...");
             m.Trace().Send("a trace");
             m.Trace().Send("another one");
@@ -124,7 +124,7 @@ This MUST be correctly indented!"))
                 {
                     m.Info().Send("Info in info group.");
                     m.Info().Send("Another info in info group.");
-                    //m.Error().Send(ThrowExceptionWithInner(true), "An error.");
+                    m.Error().Send(ThrowExceptionWithInner(true), "An error.");
                     m.Warn().Send("A warning.");
                     m.Trace().Send("Something must be said.");
                     m.CloseGroup("Everything is in place.");
@@ -148,9 +148,27 @@ and this is fine!" )
             m.Trace().Send("This is the final trace.");
         }
 
-        private static string ThrowExceptionWithInner(bool v)
+        static Exception ThrowExceptionWithInner(bool loaderException = false)
         {
-            throw new NotImplementedException();
+            Exception e;
+            try { throw new Exception("Outer", loaderException ? ThrowLoaderException() : ThrowSimpleException("Inner")); }
+            catch (Exception ex) { e = ex; }
+            return e;
+        }
+
+        static Exception ThrowSimpleException(string message)
+        {
+            Exception e;
+            try { throw new Exception(message); }
+            catch (Exception ex) { e = ex; }
+            return e;
+        }
+        static Exception ThrowLoaderException()
+        {
+            Exception e = null;
+            try { Type.GetType("A.Type, An.Unexisting.Assembly", true); }
+            catch (Exception ex) { e = ex; }
+            return e;
         }
     }
 }
