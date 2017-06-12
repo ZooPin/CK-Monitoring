@@ -29,7 +29,8 @@ namespace LuceneSearchConsole
                         + "\nText : " + doc.Get("Text")
                         + "\nTags : " + doc.Get("Tags")
                         + "\nSource file name : " + doc.Get("FileName")
-                        + "\nLine number : " + doc.Get("LineNumber") +"\n");
+                        + "\nLine number : " + doc.Get("LineNumber"));
+                    GetExceptions(doc);
                 }
                 else if (doc.GetValues("LogType")[0] == "OpenGroup")
                 {
@@ -38,16 +39,24 @@ namespace LuceneSearchConsole
                         + "\nText : " + doc.Get("Text")
                         + "\nTags : " + doc.Get("Tags")
                         + "\nSource file name : " + doc.Get("FileName")
-                        + "\nLine number : " + doc.Get("LineNumber") + "\n");
+                        + "\nLine number : " + doc.Get("LineNumber"));
+                    GetExceptions(doc);
                 }
                 else if (doc.GetValues("LogType")[0] == "CloseGroup")
                 {
                     Console.WriteLine("Log time : " + doc.Get("LogTime")
                         + "\nLog level : " + doc.Get("LogLevel")
-                        + "\nConclusion : " + doc.Get("Conclusions") + "\n");
+                        + "\nConclusion : " + doc.Get("Conclusions"));
                 }
+                Console.WriteLine("\nTimeStampID" + doc.Get("TimestampID"));
+                Console.WriteLine("\n");
             }
             return hits.TotalHits == 0 ? false : true;
+        }
+
+        private void GetExceptions(Document doc)
+        {
+            if (doc.GetField("Exception") != null) Console.WriteLine("Exceptions : " + doc.Get("Exception"));
         }
     }
 }
