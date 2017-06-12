@@ -12,7 +12,7 @@ using Lucene.Net.Store;
 
 namespace GloutonLucene
 {
-    class LuceneSearcher
+    public class LuceneSearcher
     {
         IndexSearcher _indexSearcher;
         QueryParser _queryParser;
