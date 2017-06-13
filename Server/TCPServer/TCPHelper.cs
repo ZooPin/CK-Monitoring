@@ -10,6 +10,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using GloutonLucene;
 
 namespace Glouton.TCPServer
 {
@@ -37,10 +38,11 @@ namespace Glouton.TCPServer
         {
             using (client)
             using (NetworkStream networkStream = client.GetStream())
+            using (LuceneIndexer indexer = new LuceneIndexer("C:\\Dev\\CK-Monitoring-Bis\\CK-Monitoring\\Server\\Lucene\\Index"))
             {
                 await BlockReceiver.OpenBlockReader(this, await ReadBlock(networkStream));
                 while 
-                    (await BlockReceiver.LogBlockReader(await ReadBlock(networkStream)));
+                    (await BlockReceiver.LogBlockReader(await ReadBlock(networkStream), indexer));
             }
             Console.WriteLine("Server: [client][disconnect]");
         }
@@ -62,7 +64,7 @@ namespace Glouton.TCPServer
             if (_buffer.Length < size) _buffer = new byte[size];
             int totalReceived = 0;
             int readByte = 0;
-            while(totalReceived < size && (readByte = await stream.ReadAsync(_buffer, totalReceived, size - totalReceived)) > 0)
+            while (totalReceived < size && (readByte = await stream.ReadAsync(_buffer, totalReceived, size - totalReceived)) > 0)
             {
                 totalReceived += readByte;
             }

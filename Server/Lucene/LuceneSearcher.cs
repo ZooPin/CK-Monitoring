@@ -12,18 +12,18 @@ using Lucene.Net.Store;
 
 namespace GloutonLucene
 {
-    class LuceneSearcher
+    public class LuceneSearcher
     {
         IndexSearcher _indexSearcher;
         QueryParser _queryParser;
         Query _query;
 
-        public LuceneSearcher(string indexDirPath)
+        public LuceneSearcher(string indexDirPath, string field)
         {
             Lucene.Net.Store.Directory indexDirectory = FSDirectory.Open(new DirectoryInfo(indexDirPath));
             _indexSearcher = new IndexSearcher(DirectoryReader.Open(indexDirectory));
             _queryParser = new QueryParser(LuceneVersion.LUCENE_48,
-                LuceneConstant.Content,
+                field,
                 new StandardAnalyzer(LuceneVersion.LUCENE_48));
         }
 

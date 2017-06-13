@@ -1,0 +1,34 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace Glouton.SPA.Models.LogViewModel
+{
+    public enum LogType {
+        Opengroup,
+        Line,
+        CloseGroup
+    }
+
+    public static class Log
+    {
+        static public string Exception => "Exception";
+        static public string LogTime => "LogTime";
+        static public string LogType => "LogType";
+        static public string LogLevel => "LogLevel";
+        static public string Conclusion => "Conclusion";
+        static public string Tags => "Tags";
+        static public string Text => "Text";
+        static public string SourceFileName => "FileName";
+        static public string LineNumber => "LineNumber";
+    } 
+
+    public interface ILogViewModel
+    {
+        LogType LogType { get; }
+        string Exception { get; set; }
+        string LogTime { get; set; }
+        string LogLevel { get; set; }
+    }
+}
