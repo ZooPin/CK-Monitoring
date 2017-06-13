@@ -42,8 +42,8 @@ namespace GloutonLucene
                 if (log.Exception != null)
                 {
                     Document exDoc = GetExceptionDocuments(log.Exception);
-                    Console.WriteLine("exception " + exDoc.Get("indexTS").ToString());
-                    Field exception = new TextField("Exception", exDoc.Get("indexTS").ToString(), Field.Store.YES);
+                    Console.WriteLine("exception " + exDoc.Get("IndexTS"));
+                    Field exception = new TextField("Exception", exDoc.Get("IndexTS").ToString(), Field.Store.YES);
                     document.Add(exception);
                 }
                 document.Add(logLevel);
@@ -71,7 +71,7 @@ namespace GloutonLucene
             }
 
             Field logType = new TextField("LogType", log.LogType.ToString(), Field.Store.YES);
-            Field indexTS = new StringField("indexTS", CreateIndexTS().ToString(), Field.Store.YES);
+            Field indexTS = new StringField("IndexTS", CreateIndexTS().ToString(), Field.Store.YES);
 
             document.Add(logType);
             document.Add(indexTS);
@@ -84,15 +84,26 @@ namespace GloutonLucene
             Document document = new Document();
 
             Field message = new TextField("Message", exception.Message, Field.Store.YES);
-            Field stack = new TextField("stack", exception.StackTrace, Field.Store.YES);
-            Field indexTS = new StringField("indexTS", CreateIndexTS().ToString(), Field.Store.YES);
-            
+            Field stack = new TextField("Stack", exception.StackTrace, Field.Store.YES);
+            Field indexTS = new StringField("IndexTS", CreateIndexTS().ToString(), Field.Store.YES);
+
             if (exception.InnerException != null)
             {
                 Document exDoc = GetExceptionDocuments(exception.InnerException);
-                Console.WriteLine("inner exception " + exDoc.Get("indexTS").ToString());
-                Field innerException = new TextField("innerException", exDoc.Get("indexTS").ToString(), Field.Store.YES);
+                Console.WriteLine("inner exception " + exDoc.Get("IndexTS"));
+                Field innerException = new StringField("InnerException", exDoc.Get("IndexTS").ToString(), Field.Store.YES);
                 document.Add(innerException);
+            }
+
+            if (exception.DetailedInfo != null)
+            {
+                Field details = new TextField("Details", exception.DetailedInfo, Field.Store.YES);
+                document.Add(details);
+            }
+            if (exception.FileName != null)
+            {
+                Field filename = new StringField("Filename", exception.FileName, Field.Store.YES);
+                document.Add(filename);
             }
 
             document.Add(message);
@@ -106,9 +117,9 @@ namespace GloutonLucene
 
         private DateTimeStamp CreateIndexTS()
         {
-            DateTimeStamp indexTS = new DateTimeStamp(_lastDateTimeStamp, DateTime.UtcNow);
-            _lastDateTimeStamp = indexTS;
-            return indexTS;
+            DateTimeStamp IndexTS = new DateTimeStamp(_lastDateTimeStamp, DateTime.UtcNow);
+            _lastDateTimeStamp = IndexTS;
+            return IndexTS;
         }
 
         public void IndexLog(ILogEntry log)
