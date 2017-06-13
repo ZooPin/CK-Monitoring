@@ -17,11 +17,11 @@ namespace Glouton.SPA.Services
             LuceneSearcher searcher;
 
             List<ILogViewModel> result = new List<ILogViewModel>();
-            searcher = new LuceneSearcher(path, Log.LogLevel);
-            TopDocs hits = searcher.search(query);
+            searcher = new LuceneSearcher(path, new string[] { Log.LogLevel, Log.Exception });
+            TopDocs hits = searcher.Search(query);
             foreach (ScoreDoc scoreDoc in hits.ScoreDocs)
             {
-                Document doc = searcher.getDocument(scoreDoc);
+                Document doc = searcher.GetDocument(scoreDoc);
                 switch(doc.Get(Log.LogType))
                 {
                     case "OpenGroup": result.Add(OpenGroupViewModel.Get(doc));
