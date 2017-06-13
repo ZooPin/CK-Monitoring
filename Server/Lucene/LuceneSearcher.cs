@@ -15,25 +15,30 @@ namespace GloutonLucene
     public class LuceneSearcher
     {
         IndexSearcher _indexSearcher;
-        QueryParser _queryParser;
+        MultiFieldQueryParser _queryParser;
         Query _query;
 
-        public LuceneSearcher(string indexDirPath, string field)
+        public LuceneSearcher(string indexDirPath, string[] fields)
         {
             Lucene.Net.Store.Directory indexDirectory = FSDirectory.Open(new DirectoryInfo(indexDirPath));
             _indexSearcher = new IndexSearcher(DirectoryReader.Open(indexDirectory));
-            _queryParser = new QueryParser(LuceneVersion.LUCENE_48,
-                field,
+            _queryParser =  new MultiFieldQueryParser(LuceneVersion.LUCENE_48,
+                fields,
                 new StandardAnalyzer(LuceneVersion.LUCENE_48));
         }
 
-        public TopDocs search (string searchQuery)
+        public TopDocs Search (string searchQuery)
         {
             _query = _queryParser.Parse(searchQuery);
             return _indexSearcher.Search(_query, LuceneConstant.MaxSearch);
         }
 
-        public Document getDocument(ScoreDoc scoreDoc)
+        public TopDocs Search(Query searchQuery)
+        {
+            return _indexSearcher.Search(searchQuery, LuceneConstant.MaxSearch);
+        }
+
+        public Document GetDocument(ScoreDoc scoreDoc)
         {
             return _indexSearcher.Doc(scoreDoc.Doc);
         }
