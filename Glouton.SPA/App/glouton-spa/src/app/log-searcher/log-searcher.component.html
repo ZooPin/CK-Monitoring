@@ -1,0 +1,18 @@
+<div class="container">
+  <div class="input-group">
+    <span class="input-group-addon" id="basic-addon1">Search</span>
+    <input #query (keyup.enter)="Search(query.value); query.value=''" type="text" class="form-control" placeholder="trace" aria-describedby="basic-addon1">
+  </div>
+  <br>
+  <div class="row" *ngFor="let log of data">
+    <p *ngIf="log.exception"> {{log.exception}}</p>
+    <div class="panel panel-default">
+      <div class="panel-heading"><span class="label label-default">{{log.logLevel}}</span> <span class="label label-default">{{log.tags}}</span></div>
+      <div class="panel-body">
+        <p>{{log.Text}}</p>
+        <p>{{log.sourceFileName}}</p>
+        <p>{{log.logTime}}</p>
+      </div>
+    </div>
+  </div>
+</div>
