@@ -15,7 +15,7 @@ namespace Glouton.SPA.Models.LogViewModel
         public string Exception { get; set; }
         public string LogTime { get; set; }
 
-        static CloseGroupViewModel Get (Document doc)
+        public static CloseGroupViewModel Get (Document doc)
         {
             CloseGroupViewModel obj = new CloseGroupViewModel
             {

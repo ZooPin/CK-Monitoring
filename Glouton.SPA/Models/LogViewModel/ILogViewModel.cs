@@ -11,10 +11,11 @@ namespace Glouton.SPA.Models.LogViewModel
         CloseGroup
     }
 
-    static public class Log
+    public static class Log
     {
         static public string Exception => "Exception";
         static public string LogTime => "LogTime";
+        static public string LogType => "LogType";
         static public string LogLevel => "LogLevel";
         static public string Conclusion => "Conclusion";
         static public string Tags => "Tags";
@@ -23,7 +24,7 @@ namespace Glouton.SPA.Models.LogViewModel
         static public string LineNumber => "LineNumber";
     } 
 
-    interface ILogViewModel
+    public interface ILogViewModel
     {
         LogType LogType { get; }
         string Exception { get; set; }
