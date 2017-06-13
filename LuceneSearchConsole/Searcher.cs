@@ -12,7 +12,7 @@ namespace LuceneSearchConsole
 {
     class Searcher
     {
-        static string _indexDir = "C:\\Dev\\CK-Monitoring-Bis\\CK-Monitoring\\Server\\Lucene\\Index";
+        static string _indexDir = "C:\\Indexer";
         LuceneSearcher _searcher;
         
         internal bool Search(string searchQuery)

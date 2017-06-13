@@ -13,11 +13,11 @@ namespace Glouton.SPA.Services
     {
         static public List<ILogViewModel> Search(string query)
         {
-        string path = "C:\\Indexer";
-        LuceneSearcher searcher;
+            string path = "C:\\Indexer";
+            LuceneSearcher searcher;
 
-        List<ILogViewModel> result = new List<ILogViewModel>();
-            searcher = new LuceneSearcher(path);
+            List<ILogViewModel> result = new List<ILogViewModel>();
+            searcher = new LuceneSearcher(path, Log.LogLevel);
             TopDocs hits = searcher.search(query);
             foreach (ScoreDoc scoreDoc in hits.ScoreDocs)
             {
