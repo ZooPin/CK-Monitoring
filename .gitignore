@@ -241,3 +241,5 @@ CodeCakeBuilder/Tools/nuget.exe
 SGVVersionInfo.cs
 Tests/CK.Monitoring.Tests/TestResult.*.xml
 Tests/CK.Monitoring.Tests/RootLogPath/
+*.dll
+index*

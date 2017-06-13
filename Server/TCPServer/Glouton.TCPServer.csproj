@@ -1,5 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <Import Project="..\..\Common\Shared.props" />
+
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFrameworks>net461;netcoreapp1.1</TargetFrameworks>
@@ -11,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\CK.Monitoring\CK.Monitoring.csproj" />
+    <ProjectReference Include="..\Lucene\Glouton.Lucene.csproj" />
     <ProjectReference Include="..\..\CK.TcpHandler\CK.TcpHandler.csproj" />
   </ItemGroup>
 

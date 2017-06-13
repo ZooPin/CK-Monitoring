@@ -7,12 +7,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using GloutonLucene;
 
 namespace Glouton.TCPServer
 {
     public static class BlockReceiver
     {
-        public static async Task<bool> LogBlockReader(byte[] block)
+        public static async Task<bool> LogBlockReader(byte[] block, LuceneIndexer indexer)
         {
             if (block.Length == 0) return false;
             ILogBlock logBlock = await BlockReader.Log(block);
@@ -22,7 +23,7 @@ namespace Glouton.TCPServer
             switch (logBlock.Type)
             {
                 case LogType.CKMonitoring:
-                    LoggerConverter(logBlock.Log); // IMultiCastEntry instance
+                    indexer.IndexLog(LoggerConverter(logBlock.Log));
                     Console.WriteLine("Server: [Received][Log.CKMonitoring]");
                     break;
                 case LogType.Critical:
