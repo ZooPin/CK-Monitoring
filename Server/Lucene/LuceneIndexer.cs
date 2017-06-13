@@ -86,12 +86,24 @@ namespace GloutonLucene
             Field message = new TextField("Message", exception.Message, Field.Store.YES);
             Field stack = new TextField("Stack", exception.StackTrace, Field.Store.YES);
             Field indexTS = new StringField("IndexTS", CreateIndexTS().ToString(), Field.Store.YES);
+
             if (exception.InnerException != null)
             {
                 Document exDoc = GetExceptionDocuments(exception.InnerException);
                 Console.WriteLine("inner exception " + exDoc.Get("IndexTS"));
-                Field innerException = new TextField("InnerException", exDoc.Get("IndexTS").ToString(), Field.Store.YES);
+                Field innerException = new StringField("InnerException", exDoc.Get("IndexTS").ToString(), Field.Store.YES);
                 document.Add(innerException);
+            }
+
+            if (exception.DetailedInfo != null)
+            {
+                Field details = new TextField("Details", exception.DetailedInfo, Field.Store.YES);
+                document.Add(details);
+            }
+            if (exception.FileName != null)
+            {
+                Field filename = new StringField("Filename", exception.FileName, Field.Store.YES);
+                document.Add(filename);
             }
 
             document.Add(message);
