@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.7
+VisualStudioVersion = 15.0.26430.6
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C51E8D11-FC45-4D5B-85DC-68A7EEB83601}"
 	ProjectSection(SolutionItems) = preProject
@@ -19,6 +19,14 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CK.Monitoring.Tests", "Tests\CK.Monitoring.Tests\CK.Monitoring.Tests.csproj", "{D9AC45A9-A7F9-4070-8AB4-50D76C688912}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeCakeBuilder", "CodeCakeBuilder\CodeCakeBuilder.csproj", "{FD4817B6-3CD7-4E74-AA10-7CA95FDFCF2D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CK.TcpHandler", "CK.TcpHandler\CK.TcpHandler.csproj", "{0938EFB6-3C5C-49CB-A80A-61CD694196C0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{B216DC8A-8720-47F4-B450-076AEFFB71D2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Glouton.TCPServer", "Server\TCPServer\Glouton.TCPServer.csproj", "{2230CD45-7BE7-4E3C-8317-CA8EAB892910}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Glouton.Lucene", "Server\Lucene\Glouton.Lucene.csproj", "{12BDB351-D9CE-46E0-ACCB-C9BC64D8F2FD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,11 +46,25 @@ Global
 		{FD4817B6-3CD7-4E74-AA10-7CA95FDFCF2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD4817B6-3CD7-4E74-AA10-7CA95FDFCF2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD4817B6-3CD7-4E74-AA10-7CA95FDFCF2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0938EFB6-3C5C-49CB-A80A-61CD694196C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0938EFB6-3C5C-49CB-A80A-61CD694196C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0938EFB6-3C5C-49CB-A80A-61CD694196C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0938EFB6-3C5C-49CB-A80A-61CD694196C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2230CD45-7BE7-4E3C-8317-CA8EAB892910}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2230CD45-7BE7-4E3C-8317-CA8EAB892910}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2230CD45-7BE7-4E3C-8317-CA8EAB892910}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2230CD45-7BE7-4E3C-8317-CA8EAB892910}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12BDB351-D9CE-46E0-ACCB-C9BC64D8F2FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12BDB351-D9CE-46E0-ACCB-C9BC64D8F2FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12BDB351-D9CE-46E0-ACCB-C9BC64D8F2FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12BDB351-D9CE-46E0-ACCB-C9BC64D8F2FD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{D9AC45A9-A7F9-4070-8AB4-50D76C688912} = {1E041F87-872B-43D0-B107-2D998F7AEE38}
+		{2230CD45-7BE7-4E3C-8317-CA8EAB892910} = {B216DC8A-8720-47F4-B450-076AEFFB71D2}
+		{12BDB351-D9CE-46E0-ACCB-C9BC64D8F2FD} = {B216DC8A-8720-47F4-B450-076AEFFB71D2}
 	EndGlobalSection
 EndGlobal

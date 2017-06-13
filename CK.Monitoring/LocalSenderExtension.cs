@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CK.Core
 {
-    static class LocalSenderExtension
+    public static class LocalSenderExtension
     {
         public static void SendLine( this IActivityMonitor @this, LogLevel level, string text, Exception ex, [CallerFilePath]string fileName = null, [CallerLineNumber]int lineNumber = 0 )
         {

@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Lucene.Net.QueryParser" Version="4.8.0-beta00004" />
+    <PackageReference Include="Lucene.Net" Version="4.8.0-beta00004" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\CK.Monitoring\CK.Monitoring.csproj" />
+  </ItemGroup>
+
+</Project>
