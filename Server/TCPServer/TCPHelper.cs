@@ -38,7 +38,7 @@ namespace Glouton.TCPServer
         {
             using (client)
             using (NetworkStream networkStream = client.GetStream())
-            using (LuceneIndexer indexer = new LuceneIndexer("C:\\Dev\\CK-Monitoring-Bis\\CK-Monitoring\\Server\\Lucene\\Index"))
+            using (LuceneIndexer indexer = new LuceneIndexer("C:\\Indexer"))
             {
                 await BlockReceiver.OpenBlockReader(this, await ReadBlock(networkStream));
                 while 
