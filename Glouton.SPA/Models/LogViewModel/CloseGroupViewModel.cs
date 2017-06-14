@@ -1,4 +1,6 @@
-﻿using Lucene.Net.Documents;
+﻿using Glouton.SPA.Models.ExceptionViewModel;
+using GloutonLucene;
+using Lucene.Net.Documents;
 using Lucene.Net.Search;
 using System;
 using System.Collections.Generic;
@@ -12,16 +14,17 @@ namespace Glouton.SPA.Models.LogViewModel
         public string LogLevel { get; set; }
         public string Conclusion { get; set; }
         public LogType LogType { get => LogType.CloseGroup; }
-        public string Exception { get; set; }
+        public IExceptionViewModel Exception { get; set; }
         public string LogTime { get; set; }
 
-        public static CloseGroupViewModel Get (Document doc)
+        public static CloseGroupViewModel Get (LuceneSearcher searcher, Document doc)
         {
             CloseGroupViewModel obj = new CloseGroupViewModel
             {
                 LogLevel = doc.Get(Log.LogLevel),
                 LogTime = doc.Get(Log.LogTime),
                 Conclusion = doc.Get(Log.Conclusion),
+                Exception = ExceptionViewModel.ExceptionViewModel.Get(searcher, doc)
             };
 
             return obj;

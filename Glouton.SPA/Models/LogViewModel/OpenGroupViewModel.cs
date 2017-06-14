@@ -1,4 +1,6 @@
-﻿using Lucene.Net.Documents;
+﻿using Glouton.SPA.Models.ExceptionViewModel;
+using GloutonLucene;
+using Lucene.Net.Documents;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,19 +15,18 @@ namespace Glouton.SPA.Models.LogViewModel
         public string LogTime { get; set; }
         public string Text { get; set; }
         public string SourceFileName { get; set; }
-        public string Exception { get; set; }
+        public IExceptionViewModel Exception { get; set; }
 
-        public static OpenGroupViewModel Get (Document doc)
+        public static OpenGroupViewModel Get (LuceneSearcher searcher, Document doc)
         {
             OpenGroupViewModel obj = new OpenGroupViewModel()
             {
                 LogLevel = doc.Get(Log.LogLevel),
                 LogTime = doc.Get(Log.LogTime),
                 Text = doc.Get(Log.Text),
-                SourceFileName = doc.Get(Log.SourceFileName)
+                SourceFileName = doc.Get(Log.SourceFileName),
+                Exception = ExceptionViewModel.ExceptionViewModel.Get(searcher, doc)
             };
-
-            if (doc.GetField(Log.Exception) != null) obj.Exception = doc.Get(Log.Exception);
 
             return obj;
         }

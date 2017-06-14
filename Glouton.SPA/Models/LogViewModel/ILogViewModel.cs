@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Glouton.SPA.Models.ExceptionViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,12 +23,17 @@ namespace Glouton.SPA.Models.LogViewModel
         static public string Text => "Text";
         static public string SourceFileName => "FileName";
         static public string LineNumber => "LineNumber";
+        static public string InnerException => "InnerException";
+        static public string Stack => "Stack";
+        static public string Message => "Message";
+        static public string FileName => "Filename";
+        static public string Detail => "Detail";
     } 
 
     public interface ILogViewModel
     {
         LogType LogType { get; }
-        string Exception { get; set; }
+        IExceptionViewModel Exception { get; set; }
         string LogTime { get; set; }
         string LogLevel { get; set; }
     }

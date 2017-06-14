@@ -1,4 +1,7 @@
-﻿using Lucene.Net.Documents;
+﻿using Glouton.SPA.Models.ExceptionViewModel;
+using Glouton.SPA.Models.LogViewModel;
+using GloutonLucene;
+using Lucene.Net.Documents;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,10 +16,10 @@ namespace Glouton.SPA.Models.LogViewModel
         public string Text { get; set; }
         public string Tags { get; set; }
         public string SourceFileName { get; set; }
-        public string Exception { get; set; }
+        public IExceptionViewModel Exception { get; set; }
         public string LogLevel { get; set; }
 
-        public static LineViewModel Get (Document doc)
+        public static LineViewModel Get(LuceneSearcher searcher, Document doc)
         {
             LineViewModel obj = new LineViewModel()
             {
@@ -24,10 +27,9 @@ namespace Glouton.SPA.Models.LogViewModel
                 Text = doc.Get(Log.Text),
                 Tags = doc.Get(Log.Tags),
                 SourceFileName = doc.Get(Log.SourceFileName),
-                LogTime = doc.Get(Log.LogTime)
+                LogTime = doc.Get(Log.LogTime),
+                Exception = ExceptionViewModel.ExceptionViewModel.Get(searcher, doc)
             };
-
-            if (doc.GetField(Log.Exception) != null) obj.Exception = doc.Get(Log.Exception);
             return obj;
         }
     }
