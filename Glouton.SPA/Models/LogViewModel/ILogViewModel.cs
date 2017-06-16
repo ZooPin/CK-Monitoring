@@ -27,7 +27,7 @@ namespace Glouton.SPA.Models.LogViewModel
         static public string Stack => "Stack";
         static public string Message => "Message";
         static public string FileName => "Filename";
-        static public string Detail => "Detail";
+        static public string Detail => "Details";
     } 
 
     public interface ILogViewModel

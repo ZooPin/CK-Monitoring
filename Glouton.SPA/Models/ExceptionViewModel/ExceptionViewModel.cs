@@ -27,7 +27,7 @@ namespace Glouton.SPA.Models.ExceptionViewModel
             {
                 Message = exception.Get(Log.Message),
                 Stack = exception.Get(Log.Stack),
-                InnerException = InnerExceptionViewModel.Get(searcher, doc)
+                InnerException = InnerExceptionViewModel.Get(searcher, exception)
             };
         }
     }
