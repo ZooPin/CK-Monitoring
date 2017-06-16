@@ -27,9 +27,19 @@ namespace GloutonLucene
             _lastDateTimeStamp = new DateTimeStamp(DateTime.UtcNow, 0);
         }
 
-        private Document GetLogDocument(ILogEntry log)
+        private Document GetLogDocument(IMulticastLogEntry log)
         {
             Document document = new Document();
+
+            Field monitorId = new StringField("MonitorId", log.MonitorId.ToString(), Field.Store.YES);
+            Field groupDepth = new StringField("GroupDepth", log.GroupDepth.ToString(), Field.Store.YES);
+            Field previousEntryType = new StringField("PreviousEntryType", log.PreviousEntryType.ToString(), Field.Store.YES);
+            Field previousLogTime = new StringField("PreviousLogTime", log.PreviousLogTime.ToString(), Field.Store.YES);
+
+            document.Add(monitorId);
+            document.Add(groupDepth);
+            document.Add(previousEntryType);
+            document.Add(previousLogTime);
 
             if (log.LogType == LogEntryType.Line || log.LogType == LogEntryType.OpenGroup)
             {
@@ -87,10 +97,14 @@ namespace GloutonLucene
             Field stack = new TextField("Stack", exception.StackTrace, Field.Store.YES);
             Field indexTS = new StringField("IndexTS", CreateIndexTS().ToString(), Field.Store.YES);
 
+            if(exception.AggregatedExceptions != null)
+            {
+
+            }
+
             if (exception.InnerException != null)
             {
                 Document exDoc = GetExceptionDocuments(exception.InnerException);
-                Console.WriteLine("inner exception " + exDoc.Get("IndexTS"));
                 Field innerException = new StringField("InnerException", exDoc.Get("IndexTS").ToString(), Field.Store.YES);
                 document.Add(innerException);
             }
@@ -122,7 +136,7 @@ namespace GloutonLucene
             return IndexTS;
         }
 
-        public void IndexLog(ILogEntry log)
+        public void IndexLog(IMulticastLogEntry log)
         {
             Document document = GetLogDocument(log);
             _writer.AddDocument(document);

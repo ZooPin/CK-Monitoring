@@ -22,7 +22,10 @@ namespace LuceneSearchConsole
             foreach (ScoreDoc scoreDoc in hits.ScoreDocs)
             {
                 Document doc = _searcher.GetDocument(scoreDoc);
-                if(doc.Get("LogType") == "Line")
+
+                Console.WriteLine("Monitor Id : " + doc.Get("MonitorId"));
+
+                if (doc.Get("LogType") == "Line")
                 {
                     Console.WriteLine("Log time : " + doc.Get("LogTime")
                         + "\nLog level : " + doc.Get("LogLevel")
