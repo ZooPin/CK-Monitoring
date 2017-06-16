@@ -19,7 +19,7 @@ namespace Glouton.SPA.Models.ExceptionViewModel
         public static IExceptionViewModel Get(LuceneSearcher searcher, Document doc)
         {
             if (doc.GetField(Log.Exception) == null) return null;
-            TermQuery query = new TermQuery(new Term(Log.Exception));
+            TermQuery query = new TermQuery(new Term("IndexTS", doc.Get(Log.Exception)));
             TopDocs exceptionDoc = searcher.Search(query);
             Document exception = searcher.GetDocument(exceptionDoc.ScoreDocs[0]);
 

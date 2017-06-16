@@ -12,6 +12,10 @@
         <p>{{log.Text}}</p>
         <p>{{log.sourceFileName}}</p>
         <p>{{log.logTime}}</p>
+        <div *ngIf="log.exception" class="alert alert-danger" role="alert">
+          <p><strong>Exception</strong></p>
+          <p><strong>{{log.exception.message}}</strong><br>{{log.exception.stack}}</p>
+        </div>
       </div>
     </div>
   </div>
