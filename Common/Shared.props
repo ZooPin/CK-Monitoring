@@ -28,9 +28,9 @@
 
   <PropertyGroup>
     <!-- Standard properties. -->
-    <AssemblyOriginatorKeyFile>$(SharedDir)SharedKey.snk</AssemblyOriginatorKeyFile>
+    <!--<AssemblyOriginatorKeyFile>$(SharedDir)SharedKey.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
-    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
+    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>-->
     <RepositoryType>git</RepositoryType>
 
     <!-- Invenietis standard properties. -->

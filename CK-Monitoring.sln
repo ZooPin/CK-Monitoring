@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.6
+VisualStudioVersion = 15.0.26430.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C51E8D11-FC45-4D5B-85DC-68A7EEB83601}"
 	ProjectSection(SolutionItems) = preProject
@@ -16,11 +16,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{1E041F87
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CK.Monitoring", "CK.Monitoring\CK.Monitoring.csproj", "{4A4EAEFF-2A8B-4308-A178-3FFEE94CC009}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CK.Monitoring.Tests", "Tests\CK.Monitoring.Tests\CK.Monitoring.Tests.csproj", "{D9AC45A9-A7F9-4070-8AB4-50D76C688912}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CK.Monitoring.Tests", "Tests\CK.Monitoring.Tests\CK.Monitoring.Tests.csproj", "{D9AC45A9-A7F9-4070-8AB4-50D76C688912}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeCakeBuilder", "CodeCakeBuilder\CodeCakeBuilder.csproj", "{FD4817B6-3CD7-4E74-AA10-7CA95FDFCF2D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CK.TcpHandler", "CK.TcpHandler\CK.TcpHandler.csproj", "{0938EFB6-3C5C-49CB-A80A-61CD694196C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CK.TcpHandler", "CK.TcpHandler\CK.TcpHandler.csproj", "{0938EFB6-3C5C-49CB-A80A-61CD694196C0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{B216DC8A-8720-47F4-B450-076AEFFB71D2}"
 EndProject
@@ -28,9 +28,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Glouton.TCPServer", "Server
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Glouton.Lucene", "Server\Lucene\Glouton.Lucene.csproj", "{12BDB351-D9CE-46E0-ACCB-C9BC64D8F2FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Glouton.SPA", "Glouton.SPA\Glouton.SPA.csproj", "{679A28B3-1A61-4DD0-991D-329E6DBDF257}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Glouton.SPA", "Glouton.SPA\Glouton.SPA.csproj", "{679A28B3-1A61-4DD0-991D-329E6DBDF257}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LuceneSearchConsole", "LuceneSearchConsole\LuceneSearchConsole.csproj", "{C84C3A54-911D-46C4-B6DA-91DA1C471615}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Glouton.LogGenForm", "Glouton.LogGenForm\Glouton.LogGenForm.csproj", "{C6185601-A524-4C8B-B9F7-93681F8F8DD2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -70,6 +72,10 @@ Global
 		{C84C3A54-911D-46C4-B6DA-91DA1C471615}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C84C3A54-911D-46C4-B6DA-91DA1C471615}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C84C3A54-911D-46C4-B6DA-91DA1C471615}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6185601-A524-4C8B-B9F7-93681F8F8DD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6185601-A524-4C8B-B9F7-93681F8F8DD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6185601-A524-4C8B-B9F7-93681F8F8DD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6185601-A524-4C8B-B9F7-93681F8F8DD2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
