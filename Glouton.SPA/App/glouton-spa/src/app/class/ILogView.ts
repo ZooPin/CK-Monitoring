@@ -4,9 +4,25 @@ export enum LogType {
     CloseGroup
 }
 
+export interface IInnerExceptionViewModel {
+    stack: string;
+    details: string;
+    fileName: string;
+}
+
+export interface IExceptionViewModel {
+    innerException: IInnerExceptionViewModel;
+    message: string;
+    stack: string;
+}
+
 export interface ILogView {
     logType: LogType;
-    exception: string;
+    exception: IExceptionViewModel;
     logTime: string;
     logLevel :string;
+    monitorId: string;
+    groupDepth: string;
+    previousEntryType: string;
+    previousLogTime: string;
 }

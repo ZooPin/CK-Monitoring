@@ -18,11 +18,19 @@ namespace Glouton.SPA.Models.LogViewModel
         public string SourceFileName { get; set; }
         public IExceptionViewModel Exception { get; set; }
         public string LogLevel { get; set; }
+        public string MonitorId { get; set; }
+        public string GroupDepth { get; set; }
+        public string PreviousEntryType { get; set; }
+        public string PreviousLogTime { get; set; }
 
         public static LineViewModel Get(LuceneSearcher searcher, Document doc)
         {
             LineViewModel obj = new LineViewModel()
             {
+                MonitorId = doc.Get(Log.MonitorId),
+                GroupDepth = doc.Get(Log.GroupDepth),
+                PreviousEntryType = doc.Get(Log.PreviousEntryType),
+                PreviousLogTime = doc.Get(Log.PreviousLogTime),
                 LogLevel = doc.Get(Log.LogLevel),
                 Text = doc.Get(Log.Text),
                 Tags = doc.Get(Log.Tags),
