@@ -1,5 +1,6 @@
 ﻿using CK.Core;
 using CK.Monitoring;
+using Glouton.LogGenForm;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -83,6 +84,11 @@ namespace Glouton.LogGenerator
                     break;
                 default: throw new ArgumentOutOfRangeException();
             }
+        }
+
+        private void buttonSendException_Click(object sender, EventArgs e)
+        {
+            Monitor.Fatal().Send(ExceptionGenerator.ThrowExceptionWithInner(checkBoxIsLoaderException.Checked));
         }
     }
 }
