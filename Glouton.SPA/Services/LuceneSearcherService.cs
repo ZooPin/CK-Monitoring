@@ -13,11 +13,9 @@ namespace Glouton.SPA.Services
     {
         static public List<ILogViewModel> Search(string query)
         {
-            string path = "C:\\Indexer";
             LuceneSearcher searcher;
-
             List<ILogViewModel> result = new List<ILogViewModel>();
-            searcher = new LuceneSearcher(path, new string[] { Log.LogLevel, Log.Exception });
+            searcher = new LuceneSearcher(new string[] { Log.LogLevel, Log.Exception });
             TopDocs hits = searcher.Search(query);
             foreach (ScoreDoc scoreDoc in hits.ScoreDocs)
             {
@@ -38,10 +36,9 @@ namespace Glouton.SPA.Services
 
         static public List<ILogViewModel> GetAll(int maxLogtoReturn)
         {
-            string path = "C:\\Indexer";
             List<ILogViewModel> result = new List<ILogViewModel>();
             LuceneSearcher searcher;
-            searcher = new LuceneSearcher(path, new string[] { Log.LogLevel });
+            searcher = new LuceneSearcher(new string[] { Log.LogLevel });
             TopDocs hits = searcher.GetAll(maxLogtoReturn);
             foreach (ScoreDoc scoreDoc in hits.ScoreDocs)
             {

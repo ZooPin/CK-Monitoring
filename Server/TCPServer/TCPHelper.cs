@@ -18,9 +18,11 @@ namespace Glouton.TCPServer
     {
         byte[] _buffer = new byte[4096];
         public IOpen OpenInfo { get; set; }
+        public string LucenePath { get; private set; }
 
         public async Task StartServer(int port)
         {
+            LucenePath = LuceneConstant.GetPath();
             TcpListener listener = new TcpListener(IPAddress.Any, port);
             listener.Start();
             Console.WriteLine($"Server: Launch on port {port}");
@@ -38,7 +40,7 @@ namespace Glouton.TCPServer
         {
             using (client)
             using (NetworkStream networkStream = client.GetStream())
-            using (LuceneIndexer indexer = new LuceneIndexer("C:\\Indexer"))
+            using (LuceneIndexer indexer = new LuceneIndexer(LucenePath))
             {
                 await BlockReceiver.OpenBlockReader(this, await ReadBlock(networkStream));
                 while 

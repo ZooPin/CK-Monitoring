@@ -10,6 +10,7 @@ using Lucene.Net.Util;
 using Lucene.Net.Analysis.Standard;
 using CK.Monitoring;
 using CK.Core;
+using System.Runtime.InteropServices;
 
 namespace GloutonLucene
 {

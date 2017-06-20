@@ -12,12 +12,11 @@ namespace LuceneSearchConsole
 {
     class Searcher
     {
-        static string _indexDir = "C:\\Indexer";
         LuceneSearcher _searcher;
 
         internal bool Search(string searchQuery)
         {
-            _searcher = new LuceneSearcher(_indexDir, new string[] {"LogLevel", "IndexTS" });
+            _searcher = new LuceneSearcher(new string[] {"LogLevel", "IndexTS" });
             TopDocs hits = _searcher.Search(searchQuery);
             foreach (ScoreDoc scoreDoc in hits.ScoreDocs)
             {

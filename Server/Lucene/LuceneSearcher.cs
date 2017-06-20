@@ -18,9 +18,9 @@ namespace GloutonLucene
         MultiFieldQueryParser _queryParser;
         Query _query;
 
-        public LuceneSearcher(string indexDirPath, string[] fields)
+        public LuceneSearcher(string[] fields)
         {
-            Lucene.Net.Store.Directory indexDirectory = FSDirectory.Open(new DirectoryInfo(indexDirPath));
+            Lucene.Net.Store.Directory indexDirectory = FSDirectory.Open(new DirectoryInfo(LuceneConstant.GetPath()));
             _indexSearcher = new IndexSearcher(DirectoryReader.Open(indexDirectory));
             _queryParser =  new MultiFieldQueryParser(LuceneVersion.LUCENE_48,
                 fields,
@@ -45,7 +45,8 @@ namespace GloutonLucene
 
         public TopDocs GetAll(int numberDocsToReturn)
         {
-            return _indexSearcher.Search(new query, numberDocsToReturn);
+            //return _indexSearcher.Search(new query, numberDocsToReturn);
+            return null;
         }
     }
 }
