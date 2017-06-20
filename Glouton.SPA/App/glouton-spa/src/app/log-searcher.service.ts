@@ -22,6 +22,11 @@ export class LogSearcherService {
     return this._http.get(path).map(res => res.json());
   }
 
+  GetAll(maxLogToReturn:number) {
+    let path: string = "/api/search/all/" + maxLogToReturn;
+    return this._http.get(path).map(res => res.json());
+  }
+
   private GeneratePath () : string {
     return "http://" + this._route + ":" + this._port + "/";
   }

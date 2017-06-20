@@ -42,5 +42,10 @@ namespace GloutonLucene
         {
             return _indexSearcher.Doc(scoreDoc.Doc);
         }
+
+        public TopDocs GetAll(int numberDocsToReturn)
+        {
+            return _indexSearcher.Search(new query, numberDocsToReturn);
+        }
     }
 }

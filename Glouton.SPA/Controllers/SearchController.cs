@@ -19,5 +19,11 @@ namespace Glouton.SPA.Controllers
             List<ILogViewModel> list = LuceneSearcherService.Search(query);
             return list;
         }
-}
+
+        [HttpGet("all/{maxLogToReturn}")]
+        public List<ILogViewModel> SearchAll(int maxLogToReturn)
+        {
+            return LuceneSearcherService.GetAll(maxLogToReturn);
+        }
+    }
 }
