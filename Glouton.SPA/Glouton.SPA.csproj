@@ -3,12 +3,17 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+	<RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="App\glouton-electron\node_modules\**" />
     <Compile Remove="App\glouton-spa\node_modules\**" />
+    <Content Remove="App\glouton-electron\node_modules\**" />
     <Content Remove="App\glouton-spa\node_modules\**" />
+    <EmbeddedResource Remove="App\glouton-electron\node_modules\**" />
     <EmbeddedResource Remove="App\glouton-spa\node_modules\**" />
+    <None Remove="App\glouton-electron\node_modules\**" />
     <None Remove="App\glouton-spa\node_modules\**" />
   </ItemGroup>
 
@@ -24,6 +29,29 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Server\Lucene\Glouton.Lucene.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Update="wwwroot/favicon.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot/index.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot/inline.bundle.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot/main.bundle.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot/polyfills.bundle.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot/styles.bundle.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot/vendor.bundle.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
