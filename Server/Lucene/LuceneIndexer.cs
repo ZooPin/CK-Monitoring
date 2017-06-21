@@ -19,6 +19,7 @@ namespace GloutonLucene
         private DateTimeStamp _lastDateTimeStamp;
         private DateTime _lastCommit;
         private int _numberOfFileToCommit;
+        private int _exceptionDepth;
 
         public LuceneIndexer (string indexDirectoryPath)
         {
@@ -28,6 +29,7 @@ namespace GloutonLucene
                 new StandardAnalyzer(LuceneVersion.LUCENE_48)));
             _lastDateTimeStamp = new DateTimeStamp(DateTime.UtcNow, 0);
             _numberOfFileToCommit = 0;
+            _exceptionDepth = 0;
         }
 
         private Document GetLogDocument(IMulticastLogEntry log)
@@ -99,12 +101,26 @@ namespace GloutonLucene
             Field stack = new TextField("Stack", exception.StackTrace, Field.Store.YES);
             Field indexTS = new StringField("IndexTS", CreateIndexTS().ToString(), Field.Store.YES);
 
-            if(exception.AggregatedExceptions != null)
+            if (exception.AggregatedExceptions != null)
             {
-                //TODO : todo
+                Field exceptionDepth = new Int32Field("ExceptionDepth", _exceptionDepth, Field.Store.YES);
+                document.Add(exceptionDepth);
+                if (_exceptionDepth == 0)
+                {
+                    StringBuilder exList = new StringBuilder();
+                    foreach (CKExceptionData ex in exception.AggregatedExceptions)
+                    {
+                        exList.Append(GetExceptionDocuments(ex).Get("IndexTS"));
+                        exList.AppendLine();
+                        _exceptionDepth++;
+                    }
+                    Field aggregatedException = new TextField("AggregatedException", exList.ToString(), Field.Store.YES);
+                    document.Add(aggregatedException);
+                }
             }
+            else _exceptionDepth = 0;
 
-            if (exception.InnerException != null)
+            if (exception.InnerException != null && exception.AggregatedExceptions == null)
             {
                 Document exDoc = GetExceptionDocuments(exception.InnerException);
                 Field innerException = new StringField("InnerException", exDoc.Get("IndexTS").ToString(), Field.Store.YES);
