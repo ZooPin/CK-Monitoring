@@ -10,7 +10,6 @@ using Lucene.Net.Util;
 using Lucene.Net.Analysis.Standard;
 using CK.Monitoring;
 using CK.Core;
-using System.Runtime.InteropServices;
 
 namespace GloutonLucene
 {
@@ -18,6 +17,8 @@ namespace GloutonLucene
     {
         private IndexWriter _writer;
         private DateTimeStamp _lastDateTimeStamp;
+        private DateTime _lastCommit;
+        private int _numberOfFileToCommit;
 
         public LuceneIndexer (string indexDirectoryPath)
         {
@@ -26,6 +27,7 @@ namespace GloutonLucene
             _writer = new IndexWriter(indexDirectory, new IndexWriterConfig(LuceneVersion.LUCENE_48,
                 new StandardAnalyzer(LuceneVersion.LUCENE_48)));
             _lastDateTimeStamp = new DateTimeStamp(DateTime.UtcNow, 0);
+            _numberOfFileToCommit = 0;
         }
 
         private Document GetLogDocument(IMulticastLogEntry log)
@@ -53,7 +55,6 @@ namespace GloutonLucene
                 if (log.Exception != null)
                 {
                     Document exDoc = GetExceptionDocuments(log.Exception);
-                    Console.WriteLine("exception " + exDoc.Get("IndexTS"));
                     Field exception = new TextField("Exception", exDoc.Get("IndexTS").ToString(), Field.Store.YES);
                     document.Add(exception);
                 }
@@ -100,7 +101,7 @@ namespace GloutonLucene
 
             if(exception.AggregatedExceptions != null)
             {
-
+                //TODO : todo
             }
 
             if (exception.InnerException != null)
@@ -125,8 +126,9 @@ namespace GloutonLucene
             document.Add(stack);
             document.Add(indexTS);
 
+            _numberOfFileToCommit++;
             _writer.AddDocument(document);
-            IndexCommit();
+            CommitIfNeeded();
 
             return document;
         }
@@ -142,10 +144,22 @@ namespace GloutonLucene
         {
             Document document = GetLogDocument(log);
             _writer.AddDocument(document);
-            IndexCommit();
+            _numberOfFileToCommit++;
+            CommitIfNeeded();
         }
 
-        public void IndexCommit()
+        public void CommitIfNeeded()
+        {
+            if (_numberOfFileToCommit <= 0) return;
+            if ((_lastCommit - DateTime.UtcNow).TotalSeconds >= 1 || _lastCommit == null || _numberOfFileToCommit >= 100)
+            {
+                _writer.Commit();
+                _lastCommit = DateTime.UtcNow;
+                _numberOfFileToCommit = 0;
+            }
+        }
+
+        public void ForceCommit()
         {
             _writer.Commit();
         }
