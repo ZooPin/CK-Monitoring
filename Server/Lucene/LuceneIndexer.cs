@@ -126,7 +126,7 @@ namespace GloutonLucene
             document.Add(indexTS);
 
             _writer.AddDocument(document);
-            _writer.Commit();
+            IndexCommit();
 
             return document;
         }
@@ -142,6 +142,11 @@ namespace GloutonLucene
         {
             Document document = GetLogDocument(log);
             _writer.AddDocument(document);
+            IndexCommit();
+        }
+
+        public void IndexCommit()
+        {
             _writer.Commit();
         }
 
