@@ -1,0 +1,1413 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CK.Monitoring</name>
+    </assembly>
+    <members>
+        <member name="T:CK.Monitoring.GrandOutput">
+            <summary>
+            A GrandOutput collects activity of multiple <see cref="T:CK.Core.IActivityMonitor"/>. 
+            It is usually useless to explicitly create an instance of GrandOutput: the <see cref="P:CK.Monitoring.GrandOutput.Default"/> one is 
+            available as soon as <see cref="M:CK.Monitoring.GrandOutput.EnsureActiveDefault(CK.Monitoring.GrandOutputConfiguration)"/> is called 
+            and will be automatically used by new <see cref="T:CK.Core.ActivityMonitor"/>.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.GrandOutput.Default">
+            <summary>
+            Gets the default <see cref="T:CK.Monitoring.GrandOutput"/> for the current Application Domain.
+            Note that <see cref="M:CK.Monitoring.GrandOutput.EnsureActiveDefault(CK.Monitoring.GrandOutputConfiguration)"/> must have been called, otherwise this static property is null.
+            </summary>
+        </member>
+        <member name="M:CK.Monitoring.GrandOutput.EnsureActiveDefault(CK.Monitoring.GrandOutputConfiguration)">
+            <summary>
+            Ensures that the <see cref="P:CK.Monitoring.GrandOutput.Default"/> GrandOutput is created and that any <see cref="T:CK.Core.ActivityMonitor"/> that will be created in this
+            application domain will automatically have a <see cref="T:CK.Monitoring.GrandOutputClient"/> registered for this Default GrandOutput.
+            </summary>
+            <param name="configuration">
+            Configuration to apply to the default GrandOutput.
+            When null, a default configuration with a <see cref="T:CK.Monitoring.Handlers.TextFileConfiguration"/> in a "Text" path is configured.
+            </param>
+            <returns>The Default GrandOutput.</returns>
+            <remarks>
+            This method is thread-safe (a simple lock protects it) and uses a <see cref="F:CK.Core.ActivityMonitor.AutoConfiguration"/> action 
+            that uses <see cref="M:CK.Monitoring.GrandOutput.EnsureGrandOutputClient(CK.Core.IActivityMonitor)"/> on newly created ActivityMonitor.
+            </remarks>
+        </member>
+        <member name="M:CK.Monitoring.GrandOutput.ApplyConfiguration(CK.Monitoring.GrandOutputConfiguration)">
+            <summary>
+            Applies a configuration.
+            </summary>
+            <param name="configuration">The configuration to apply.</param>
+        </member>
+        <member name="F:CK.Monitoring.GrandOutput.CreateHandler">
+            <summary>
+            Settable factory method for <see cref="T:CK.Monitoring.IGrandOutputHandler"/>.
+            Default implementation relies on Handlers that must be in the same 
+            assembly and namespace as their configuration objects and named the 
+            same without the "Configuration" suffix.
+            </summary>
+        </member>
+        <member name="M:CK.Monitoring.GrandOutput.#ctor(CK.Monitoring.GrandOutputConfiguration)">
+            <summary>
+            Initializes a new <see cref="T:CK.Monitoring.GrandOutput"/>. 
+            </summary>
+        </member>
+        <member name="M:CK.Monitoring.GrandOutput.EnsureGrandOutputClient(CK.Core.IActivityMonitor)">
+            <summary>
+            Ensures that a client for this GrandOutput is registered on a monitor.
+            </summary>
+            <param name="monitor">The monitor onto which a <see cref="T:CK.Monitoring.GrandOutputClient"/> must be registered.</param>
+            <returns>A newly created client or the already existing one.</returns>
+        </member>
+        <member name="P:CK.Monitoring.GrandOutput.Sink">
+            <summary>
+            Gets the sink.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.GrandOutput.IsDisposed">
+            <summary>
+            Gets whether this GrandOutput has been disposed.
+            </summary>
+        </member>
+        <member name="M:CK.Monitoring.GrandOutput.Dispose(CK.Core.IActivityMonitor,System.Int32)">
+            <summary>
+            Closes this <see cref="T:CK.Monitoring.GrandOutput"/>.
+            </summary>
+            <param name="monitor">Monitor that will be used. Must not be null.</param>
+            <param name="millisecondsBeforeForceClose">Maximal time to wait.</param>
+        </member>
+        <member name="M:CK.Monitoring.GrandOutput.Dispose">
+            <summary>
+            Calls <see cref="M:CK.Monitoring.GrandOutput.Dispose(CK.Core.IActivityMonitor,System.Int32)"/> with a <see cref="T:CK.Core.SystemActivityMonitor"/> 
+            and <see cref="F:System.Threading.Timeout.Infinite"/>.
+            </summary>
+        </member>
+        <member name="T:CK.Monitoring.GrandOutputClient">
+            <summary>
+            A GrandOutputClient is a <see cref="T:CK.Core.IActivityMonitorClient"/> that can only be obtained and registered
+            through <see cref="M:CK.Monitoring.GrandOutput.EnsureGrandOutputClient(CK.Core.IActivityMonitor)"/>.
+            </summary>
+        </member>
+        <member name="M:CK.Monitoring.GrandOutputClient.CK#Core#IActivityMonitorBoundClient#SetMonitor(CK.Core.Impl.IActivityMonitorImpl,System.Boolean)">
+            <summary>
+            forceBuggyRemove is not used here since this client is not lockable.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.GrandOutputClient.Central">
+            <summary>
+            Gets the <see cref="T:CK.Monitoring.GrandOutput"/> to which this <see cref="T:CK.Monitoring.GrandOutputClient"/> is bound.
+            </summary>
+        </member>
+        <member name="T:CK.Monitoring.GrandOutputConfiguration">
+            <summary>
+            Configure a <see cref="T:CK.Monitoring.GrandOutput"/>.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.GrandOutputConfiguration.TimerDuration">
+            <summary>
+            Gets or sets the timer duration.
+            Defaults to 500 milliseconds.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.GrandOutputConfiguration.Handlers">
+            <summary>
+            Gets the list of handlers configuration.
+            </summary>
+        </member>
+        <member name="M:CK.Monitoring.GrandOutputConfiguration.SetTimerDuration(System.TimeSpan)">
+            <summary>
+            Sets the <see cref="P:CK.Monitoring.GrandOutputConfiguration.TimerDuration"/> (fluent interface).
+            </summary>
+            <param name="duration">Sets the timer duration.</param>
+            <returns>This configuration.</returns>
+        </member>
+        <member name="M:CK.Monitoring.GrandOutputConfiguration.AddHandler(CK.Monitoring.IHandlerConfiguration)">
+            <summary>
+            Adds a handler configuration (fluent interface).
+            </summary>
+            <param name="config">The configuration top add.</param>
+            <returns>This configuration object.</returns>
+        </member>
+        <member name="M:CK.Monitoring.GrandOutputConfiguration.Clone">
+            <summary>
+            Clones this configuration.
+            </summary>
+            <returns>Clone of this configuration.</returns>
+        </member>
+        <member name="T:CK.Monitoring.GrandOutputEventInfo">
+            <summary>
+            Captures a log data with the current <see cref="P:CK.Core.IActivityMonitor.Topic"/>.
+            </summary>
+        </member>
+        <member name="F:CK.Monitoring.GrandOutputEventInfo.Entry">
+            <summary>
+            A unified, immutable, log data.
+            </summary>
+        </member>
+        <member name="F:CK.Monitoring.GrandOutputEventInfo.Topic">
+            <summary>
+            The current topic of the monitor when the log occurred. 
+            </summary>
+        </member>
+        <member name="M:CK.Monitoring.GrandOutputEventInfo.#ctor(CK.Monitoring.IMulticastLogEntry,System.String)">
+            <summary>
+            Initializes a new <see cref="T:CK.Monitoring.GrandOutputEventInfo"/>.
+            </summary>
+            <param name="e">Log entry.</param>
+            <param name="topic">Current topic.</param>
+        </member>
+        <member name="T:CK.Monitoring.Handlers.BinaryFile">
+            <summary>
+            Binary file handler.
+            </summary>
+        </member>
+        <member name="M:CK.Monitoring.Handlers.BinaryFile.#ctor(CK.Monitoring.Handlers.BinaryFileConfiguration)">
+            <summary>
+            Initializes a new <see cref="T:CK.Monitoring.Handlers.BinaryFile"/> bound to its <see cref="T:CK.Monitoring.Handlers.BinaryFileConfiguration"/>.
+            </summary>
+            <param name="config">The configuration.</param>
+        </member>
+        <member name="M:CK.Monitoring.Handlers.BinaryFile.Activate(CK.Core.IActivityMonitor)">
+            <summary>
+            Initialization of the handler: computes the path.
+            </summary>
+            <param name="m"></param>
+        </member>
+        <member name="M:CK.Monitoring.Handlers.BinaryFile.Handle(CK.Monitoring.GrandOutputEventInfo)">
+            <summary>
+            Writes a log entry.
+            </summary>
+            <param name="logEvent">The log entry.</param>
+        </member>
+        <member name="M:CK.Monitoring.Handlers.BinaryFile.OnTimer(System.TimeSpan)">
+            <summary>
+            Does nothing since files are automatically managed (relies on <see cref="P:CK.Monitoring.Handlers.FileConfigurationBase.MaxCountPerFile"/>).
+            </summary>
+            <param name="timerSpan">Indicative timer duration.</param>
+        </member>
+        <member name="M:CK.Monitoring.Handlers.BinaryFile.ApplyConfiguration(CK.Core.IActivityMonitor,CK.Monitoring.IHandlerConfiguration)">
+            <summary>
+            Attempts to apply configuration if possible.
+            </summary>
+            <param name="m">The monitor to use.</param>
+            <param name="c">Configuration to apply.</param>
+            <returns>True if the configuration applied.</returns>
+        </member>
+        <member name="M:CK.Monitoring.Handlers.BinaryFile.Deactivate(CK.Core.IActivityMonitor)">
+            <summary>
+            Closes the file if it is opened.
+            </summary>
+            <param name="m">The monitor to use to track activity.</param>
+        </member>
+        <member name="T:CK.Monitoring.Handlers.BinaryFileConfiguration">
+            <summary>
+            Configuration object for <see cref="T:CK.Monitoring.Handlers.BinaryFile"/>.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.Handlers.BinaryFileConfiguration.UseGzipCompression">
+            <summary>
+            Gets or sets whether to use Gzip compression after closing log files.
+            Defaults to false.
+            </summary>
+        </member>
+        <member name="M:CK.Monitoring.Handlers.BinaryFileConfiguration.Clone">
+            <summary>
+            Clones this configuration.
+            </summary>
+            <returns>Clone of this configuration.</returns>
+        </member>
+        <member name="T:CK.Monitoring.Handlers.FileConfigurationBase">
+            <summary>
+            Configuration base object for files.
+            </summary>
+        </member>
+        <member name="M:CK.Monitoring.Handlers.FileConfigurationBase.#ctor">
+            <summary>
+            Initializes a new <see cref="T:CK.Monitoring.Handlers.FileConfigurationBase"/>.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.Handlers.FileConfigurationBase.Path">
+            <summary>
+            Gets or sets the path of the file. When not rooted (see <see cref="M:System.IO.Path.IsPathRooted(System.String)"/>),
+            it is a sub path in <see cref="P:CK.Core.SystemActivityMonitor.RootLogPath"/>.
+            It defaults to null: it must be specified.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.Handlers.FileConfigurationBase.MaxCountPerFile">
+            <summary>
+            Gets or sets the maximal count of entries per file.
+            Defaults to 20000.
+            </summary>
+        </member>
+        <member name="M:CK.Monitoring.Handlers.FileConfigurationBase.Clone">
+            <summary>
+            Clones this configuration.
+            </summary>
+            <returns>Clone of this configuration.</returns>
+        </member>
+        <member name="T:CK.Monitoring.Handlers.TextFile">
+            <summary>
+            Text file handler.
+            </summary>
+        </member>
+        <member name="M:CK.Monitoring.Handlers.TextFile.#ctor(CK.Monitoring.Handlers.TextFileConfiguration)">
+            <summary>
+            Initializes a new <see cref="T:CK.Monitoring.Handlers.TextFile"/> based on a <see cref="T:CK.Monitoring.Handlers.TextFileConfiguration"/>.
+            </summary>
+            <param name="config">The configuration.</param>
+        </member>
+        <member name="M:CK.Monitoring.Handlers.TextFile.Activate(CK.Core.IActivityMonitor)">
+            <summary>
+            Initialization of the handler: computes the path.
+            </summary>
+            <param name="m"></param>
+        </member>
+        <member name="M:CK.Monitoring.Handlers.TextFile.Handle(CK.Monitoring.GrandOutputEventInfo)">
+            <summary>
+            Writes a log entry.
+            </summary>
+            <param name="logEvent">The log entry.</param>
+        </member>
+        <member name="M:CK.Monitoring.Handlers.TextFile.OnTimer(System.TimeSpan)">
+            <summary>
+            Does nothing since files are automatically managed (relies on <see cref="P:CK.Monitoring.Handlers.FileConfigurationBase.MaxCountPerFile"/>).
+            </summary>
+            <param name="timerSpan">Indicative timer duration.</param>
+        </member>
+        <member name="M:CK.Monitoring.Handlers.TextFile.ApplyConfiguration(CK.Core.IActivityMonitor,CK.Monitoring.IHandlerConfiguration)">
+            <summary>
+            Attempts to apply configuration if possible.
+            </summary>
+            <param name="m">The monitor to use.</param>
+            <param name="c">Configuration to apply.</param>
+            <returns>True if the configuration applied.</returns>
+        </member>
+        <member name="M:CK.Monitoring.Handlers.TextFile.Deactivate(CK.Core.IActivityMonitor)">
+            <summary>
+            Closes the file if it is opened.
+            </summary>
+            <param name="m">The monitor to use to track activity.</param>
+        </member>
+        <member name="T:CK.Monitoring.Handlers.TextFileConfiguration">
+            <summary>
+            Configuration object for <see cref="T:CK.Monitoring.Handlers.TextFile"/>.
+            </summary>
+        </member>
+        <member name="M:CK.Monitoring.Handlers.TextFileConfiguration.Clone">
+            <summary>
+            Clones this configuration.
+            </summary>
+            <returns>Clone of this configuration.</returns>
+        </member>
+        <member name="T:CK.Monitoring.IGrandOutputHandler">
+            <summary>
+            Handler interface.
+            </summary>
+        </member>
+        <member name="M:CK.Monitoring.IGrandOutputHandler.Activate(CK.Core.IActivityMonitor)">
+            <summary>
+            Prepares the handler to receive events.
+            This is called before any event will be received.
+            </summary>
+            <param name="m">The monitor to use.</param>
+            <returns>True on success, false on error (this handler will not be added).</returns>
+        </member>
+        <member name="M:CK.Monitoring.IGrandOutputHandler.OnTimer(System.TimeSpan)">
+            <summary>
+            Called on a regular basis.
+            Enables this handler to do any required housekeeping.
+            </summary>
+            <param name="timerSpan">Indicative timer duration.</param>
+        </member>
+        <member name="M:CK.Monitoring.IGrandOutputHandler.ApplyConfiguration(CK.Core.IActivityMonitor,CK.Monitoring.IHandlerConfiguration)">
+            <summary>
+            Attempts to apply configuration if possible.
+            </summary>
+            <param name="m">The monitor to use.</param>
+            <param name="c">Configuration to apply.</param>
+            <returns>True if the configuration applied.</returns>
+        </member>
+        <member name="M:CK.Monitoring.IGrandOutputHandler.Deactivate(CK.Core.IActivityMonitor)">
+            <summary>
+            Closes this handler.
+            This is called after the handler has been removed.
+            </summary>
+            <param name="m">The monitor to use.</param>
+        </member>
+        <member name="T:CK.Monitoring.IGrandOutputSink">
+            <summary>
+            Basic log event handler interface.
+            </summary>
+        </member>
+        <member name="M:CK.Monitoring.IGrandOutputSink.Handle(CK.Monitoring.GrandOutputEventInfo)">
+            <summary>
+            Handles a log event.
+            </summary>
+            <param name="logEvent">The log event.</param>
+        </member>
+        <member name="T:CK.Monitoring.IHandlerConfiguration">
+            <summary>
+            Configuration interface.
+            </summary>
+        </member>
+        <member name="M:CK.Monitoring.IHandlerConfiguration.Clone">
+            <summary>
+            Must return a deep clone of this configuration object.
+            </summary>
+            <returns>A clone of this object.</returns>
+        </member>
+        <member name="T:CK.Monitoring.ILogEntry">
+            <summary>
+            Unified interface for log entries whatever their <see cref="P:CK.Monitoring.ILogEntry.LogType"/> is.
+            All log entries can be exposed through this "rich" interface.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.ILogEntry.LogType">
+            <summary>
+            Gets the type of the log entry.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.ILogEntry.LogLevel">
+            <summary>
+            Get the log level (between LogLevel.Debug and LogLevel.Fatal).
+            This is available whatever <see cref="P:CK.Monitoring.ILogEntry.LogType"/> is.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.ILogEntry.Text">
+            <summary>
+            Gets the log text.
+            Null when when <see cref="P:CK.Monitoring.ILogEntry.LogType"/> is <see cref="F:CK.Monitoring.LogEntryType.CloseGroup"/>.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.ILogEntry.Tags">
+            <summary>
+            Gets the tags for this entry.
+            Always equals to <see cref="F:CK.Core.ActivityMonitor.Tags.Empty"/> when <see cref="P:CK.Monitoring.ILogEntry.LogType"/> is <see cref="F:CK.Monitoring.LogEntryType.CloseGroup"/>.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.ILogEntry.LogTime">
+            <summary>
+            Gets the log time.
+            This is available whatever <see cref="P:CK.Monitoring.ILogEntry.LogType"/> is.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.ILogEntry.Exception">
+            <summary>
+            Gets the exception data if any (can be not null only when <see cref="P:CK.Monitoring.ILogEntry.LogType"/> is <see cref="F:CK.Monitoring.LogEntryType.OpenGroup"/>: exceptions are exclusively carried by groups).
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.ILogEntry.FileName">
+            <summary>
+            Gets the file name of the source code that emitted the log.
+            Null when <see cref="P:CK.Monitoring.ILogEntry.LogType"/> is <see cref="F:CK.Monitoring.LogEntryType.CloseGroup"/>.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.ILogEntry.LineNumber">
+            <summary>
+            Gets the line number in the source code <see cref="P:CK.Monitoring.ILogEntry.FileName"/> that emitted the log.
+            0 when <see cref="P:CK.Monitoring.ILogEntry.LogType"/> is <see cref="F:CK.Monitoring.LogEntryType.CloseGroup"/>.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.ILogEntry.Conclusions">
+            <summary>
+            Gets any group conclusion. 
+            Always null except of course when <see cref="P:CK.Monitoring.ILogEntry.LogType"/> is <see cref="F:CK.Monitoring.LogEntryType.CloseGroup"/>.
+            </summary>
+        </member>
+        <member name="M:CK.Monitoring.ILogEntry.WriteLogEntry(CK.Core.CKBinaryWriter)">
+            <summary>
+            Writes the entry in a <see cref="T:System.IO.BinaryWriter"/>.
+            Use <see cref="M:CK.Monitoring.LogEntry.Read(CK.Core.CKBinaryReader,System.Int32,System.Boolean@)"/> to read it back.
+            </summary>
+            <param name="w">The binary writer.</param>
+        </member>
+        <member name="T:CK.Monitoring.IMulticastLogEntry">
+            <summary>
+            Unified interface for multi-cast log entries whatever their <see cref="P:CK.Monitoring.ILogEntry.LogType"/> or their source <see cref="P:CK.Monitoring.IMulticastLogInfo.MonitorId"/> is.
+            All log entries can be exposed through this "rich" interface.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.IMulticastLogEntry.GroupDepth">
+            <summary>
+            Gets the depth of the entry in the source <see cref="P:CK.Monitoring.IMulticastLogInfo.MonitorId"/>.
+            This is always available (whatever the <see cref="P:CK.Monitoring.ILogEntry.LogType">LogType</see> is <see cref="F:CK.Monitoring.LogEntryType.OpenGroup"/>, <see cref="F:CK.Monitoring.LogEntryType.CloseGroup"/>,
+            or <see cref="F:CK.Monitoring.LogEntryType.Line"/>).
+            </summary>
+        </member>
+        <member name="M:CK.Monitoring.IMulticastLogEntry.CreateUnicastLogEntry">
+            <summary>
+            Creates a unicast entry from this multi-cast one.
+            The <see cref="P:CK.Monitoring.IMulticastLogInfo.MonitorId"/> and <see cref="P:CK.Monitoring.IMulticastLogEntry.GroupDepth"/> are lost (but less memory is used).
+            </summary>
+        </member>
+        <member name="T:CK.Monitoring.IMulticastLogInfo">
+            <summary>
+            Information required by a <see cref="T:CK.Monitoring.IMulticastLogEntry"/>.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.IMulticastLogInfo.MonitorId">
+            <summary>
+            Gets the monitor identifier.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.IMulticastLogInfo.GroupDepth">
+            <summary>
+            Gets the depth of the entry in the source <see cref="P:CK.Monitoring.IMulticastLogInfo.MonitorId"/>.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.IMulticastLogInfo.PreviousEntryType">
+            <summary>
+            Gets the previous entry type. <see cref="F:CK.Monitoring.LogEntryType.None"/> when unknown.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.IMulticastLogInfo.PreviousLogTime">
+            <summary>
+            Gets the previous log time. <see cref="F:CK.Core.DateTimeStamp.Unknown"/> when unknown.
+            </summary>
+        </member>
+        <member name="T:CK.Monitoring.LogEntryType">
+            <summary>
+            Type of a <see cref="T:CK.Monitoring.ILogEntry"/>.
+            </summary>
+        </member>
+        <member name="F:CK.Monitoring.LogEntryType.None">
+            <summary>
+            Non applicable.
+            </summary>
+        </member>
+        <member name="F:CK.Monitoring.LogEntryType.Line">
+            <summary>
+            A standard log entry.
+            Except <see cref="P:CK.Monitoring.ILogEntry.Conclusions"/> (reserved to <see cref="F:CK.Monitoring.LogEntryType.CloseGroup"/>), all other properties of the <see cref="T:CK.Monitoring.ILogEntry"/> may be set.
+            </summary>
+        </member>
+        <member name="F:CK.Monitoring.LogEntryType.OpenGroup">
+            <summary>
+            Group is opened.
+            Except <see cref="P:CK.Monitoring.ILogEntry.Conclusions"/> (reserved to <see cref="F:CK.Monitoring.LogEntryType.CloseGroup"/>), all other properties of the <see cref="T:CK.Monitoring.ILogEntry"/> may be set.
+            </summary>
+        </member>
+        <member name="F:CK.Monitoring.LogEntryType.CloseGroup">
+            <summary>
+            Group is closed. 
+            Note that the only available information are <see cref="P:CK.Monitoring.ILogEntry.Conclusions"/>, <see cref="P:CK.Monitoring.ILogEntry.LogLevel"/> and <see cref="P:CK.Monitoring.ILogEntry.LogTime"/>.
+            All other properties are set to their default: <see cref="P:CK.Monitoring.ILogEntry.Text"/> for instance is null.
+            </summary>
+        </member>
+        <member name="T:CK.Monitoring.MonitorBinaryFileOutput">
+            <summary>
+            Helper class that encapsulates temporary stream and final renaming for log entries streams.
+            This currently handles only the maximum count of entries per file but this may be extended with options like "SubFolderMode" that can be based 
+            on current time (to group logs inside timed intermediate folders like one per day: 2014/01/12 or 2014-01/12, etc.). 
+            </summary>
+        </member>
+        <member name="M:CK.Monitoring.MonitorBinaryFileOutput.#ctor(System.String,System.Int32,System.Boolean)">
+            <summary>
+            Initializes a new file for <see cref="T:CK.Monitoring.IMulticastLogEntry"/>: the final file name is based on <see cref="F:CK.Core.FileUtil.FileNameUniqueTimeUtcFormat"/> with a ".ckmon" extension.
+            You must call <see cref="M:CK.Monitoring.MonitorFileOutputBase.Initialize(CK.Core.IActivityMonitor)">Initialize</see> before actually using this object.
+            </summary>
+            <param name="configuredPath">The path: it can be absolute and when relative, it will be under <see cref="P:CK.Core.SystemActivityMonitor.RootLogPath"/> (that must be set).</param>
+            <param name="maxCountPerFile">Maximum number of entries per file. Must be greater than 1.</param>
+            <param name="useGzipCompression">True to gzip the file.</param>
+        </member>
+        <member name="M:CK.Monitoring.MonitorBinaryFileOutput.#ctor(System.String,System.Guid,System.Int32,System.Boolean)">
+            <summary>
+            Initializes a new file for <see cref="T:CK.Monitoring.ILogEntry"/> issued from a specific monitor: the final file name is 
+            based on <see cref="F:CK.Core.FileUtil.FileNameUniqueTimeUtcFormat"/> with a "-{XXX...XXX}.ckmon" suffix where {XXX...XXX} is the unique identifier (Guid with the B format - 32 digits separated by 
+            hyphens, enclosed in braces) of the monitor.
+            You must call <see cref="M:CK.Monitoring.MonitorFileOutputBase.Initialize(CK.Core.IActivityMonitor)">Initialize</see> before actually using this object.
+            </summary>
+            <param name="configuredPath">The path. Can be absolute. When relative, it will be under <see cref="P:CK.Core.SystemActivityMonitor.RootLogPath"/> that must be set.</param>
+            <param name="monitorId">Monitor identifier.</param>
+            <param name="maxCountPerFile">Maximum number of entries per file. Must be greater than 1.</param>
+            <param name="useGzipCompression">True to gzip the file.</param>
+        </member>
+        <member name="M:CK.Monitoring.MonitorBinaryFileOutput.Write(CK.Monitoring.ILogEntry)">
+            <summary>
+            Writes a log entry (that can actually be a <see cref="T:CK.Monitoring.IMulticastLogEntry"/>).
+            </summary>
+            <param name="e">The log entry.</param>
+        </member>
+        <member name="M:CK.Monitoring.MonitorBinaryFileOutput.UnicastWrite(CK.Core.ActivityMonitorLogData,CK.Monitoring.IMulticastLogInfo)">
+            <summary>
+            Writes a line entry as a uni-cast compact entry or as a multi-cast one if needed.
+            </summary>
+            <param name="data">The log line.</param>
+            <param name="adapter">Multi-cast information to be able to write multi-cast entry when needed.</param>
+        </member>
+        <member name="M:CK.Monitoring.MonitorBinaryFileOutput.UnicastWriteOpenGroup(CK.Core.IActivityLogGroup,CK.Monitoring.IMulticastLogInfo)">
+            <summary>
+            Writes a group opening entry as a uni-cast compact entry or as a multi-cast one if needed.
+            </summary>
+            <param name="g">The group line.</param>
+            <param name="adapter">Multi-cast information to be able to write multi-cast entry when needed.</param>
+        </member>
+        <member name="M:CK.Monitoring.MonitorBinaryFileOutput.UnicastWriteCloseGroup(CK.Core.IActivityLogGroup,System.Collections.Generic.IReadOnlyList{CK.Core.ActivityLogGroupConclusion},CK.Monitoring.IMulticastLogInfo)">
+            <summary>
+            Writes a group closing entry as a uni-cast compact entry or as a multi-cast one if needed.
+            </summary>
+            <param name="g">The group.</param>
+            <param name="conclusions">Group's conclusions.</param>
+            <param name="adapter">Multi-cast information to be able to write multi-cast entry when needed.</param>
+        </member>
+        <member name="M:CK.Monitoring.MonitorBinaryFileOutput.OpenNewFile">
+            <summary>
+            Called when a new file is created.
+            </summary>
+            <returns>The created stream.</returns>
+        </member>
+        <member name="M:CK.Monitoring.MonitorBinaryFileOutput.CloseCurrentFile">
+            <summary>
+            Called when the current file is closed.
+            </summary>
+        </member>
+        <member name="T:CK.Monitoring.MonitorFileOutputBase">
+            <summary>
+            Helper class that encapsulates temporary stream and final renaming for log entries streams.
+            This currently handles only the maximum count of entries per file but this may be extended with options like "SubFolderMode" that can be based 
+            on current time (to group logs inside timed intermediate folders like one per day: 2014/01/12 or 2014-01/12, etc.). 
+            </summary>
+        </member>
+        <member name="M:CK.Monitoring.MonitorFileOutputBase.#ctor(System.String,System.String,System.Int32,System.Boolean)">
+            <summary>
+            Initializes a new file for <see cref="T:CK.Monitoring.IMulticastLogEntry"/>: the final file name is based on <see cref="F:CK.Core.FileUtil.FileNameUniqueTimeUtcFormat"/> with a ".ckmon" extension.
+            You must call <see cref="M:CK.Monitoring.MonitorFileOutputBase.Initialize(CK.Core.IActivityMonitor)"/> before actually using this object.
+            </summary>
+            <param name="configuredPath">The path: it can be absolute and when relative, it will be under <see cref="P:CK.Core.SystemActivityMonitor.RootLogPath"/> (that must be set).</param>
+            <param name="fileNameSuffix">Suffix of the file including its extension. Must not be null nor empty.</param>
+            <param name="maxCountPerFile">Maximum number of entries per file. Must be greater than 1.</param>
+            <param name="useGzipCompression">True to gzip the file.</param>
+        </member>
+        <member name="M:CK.Monitoring.MonitorFileOutputBase.#ctor(System.String,System.Guid,System.Int32,System.Boolean)">
+            <summary>
+            Initializes a new file for <see cref="T:CK.Monitoring.ILogEntry"/> issued from a specific monitor: the final file name is 
+            based on <see cref="F:CK.Core.FileUtil.FileNameUniqueTimeUtcFormat"/> with a "-{XXX...XXX}.ckmon" suffix where {XXX...XXX} is the unique identifier (Guid with the B format - 32 digits separated by 
+            hyphens, enclosed in braces) of the monitor.
+            You must call <see cref="M:CK.Monitoring.MonitorFileOutputBase.Initialize(CK.Core.IActivityMonitor)"/> before actually using this object.
+            </summary>
+            <param name="configuredPath">The path. Can be absolute. When relative, it will be under <see cref="P:CK.Core.SystemActivityMonitor.RootLogPath"/> that must be set.</param>
+            <param name="monitorId">Monitor identifier.</param>
+            <param name="maxCountPerFile">Maximum number of entries per file. Must be greater than 1.</param>
+            <param name="useGzipCompression">True to gzip the file.</param>
+        </member>
+        <member name="M:CK.Monitoring.MonitorFileOutputBase.ComputeBasePath(CK.Core.IActivityMonitor)">
+            <summary>
+            Computes the root path.
+            </summary>
+            <param name="m">A monitor (must not be null).</param>
+            <returns>The final path to use (ends with '\'). Null if unable to compute the path.</returns>
+        </member>
+        <member name="P:CK.Monitoring.MonitorFileOutputBase.MaxCountPerFile">
+            <summary>
+            Gets the maximum number of entries per file.
+            </summary>
+        </member>
+        <member name="M:CK.Monitoring.MonitorFileOutputBase.Initialize(CK.Core.IActivityMonitor)">
+            <summary>
+            Checks whether this <see cref="T:CK.Monitoring.MonitorFileOutputBase"/> is valid: its base path is successfully created.
+            Can be called multiple times.
+            </summary>
+            <param name="monitor">Required monitor.</param>
+        </member>
+        <member name="P:CK.Monitoring.MonitorFileOutputBase.IsOpened">
+            <summary>
+            Gets whether this file is currently opened.
+            </summary>
+        </member>
+        <member name="M:CK.Monitoring.MonitorFileOutputBase.Close">
+            <summary>
+            Closes the file if it is currently opened.
+            Does nothing otherwise.
+            </summary>
+        </member>
+        <member name="M:CK.Monitoring.MonitorFileOutputBase.BeforeWriteEntry">
+            <summary>
+            This method must be called before any write: it calls <see cref="M:CK.Monitoring.MonitorFileOutputBase.OpenNewFile"/> if needed.
+            </summary>
+        </member>
+        <member name="M:CK.Monitoring.MonitorFileOutputBase.AfterWriteEntry">
+            <summary>
+            This method must be called after write: it closes and produces the final file
+            if the current file is full.
+            </summary>
+        </member>
+        <member name="M:CK.Monitoring.MonitorFileOutputBase.Dispose">
+            <summary>
+            Simply calls <see cref="M:CK.Monitoring.MonitorFileOutputBase.Close"/>.
+            </summary>
+        </member>
+        <member name="M:CK.Monitoring.MonitorFileOutputBase.OpenNewFile">
+            <summary>
+            Opens a new file suffixed by ".tmp".
+            </summary>
+            <returns>The opened stream to write to.</returns>
+        </member>
+        <member name="M:CK.Monitoring.MonitorFileOutputBase.CloseCurrentFile">
+            <summary>
+            Closes the currently opened file.
+            </summary>
+        </member>
+        <member name="T:CK.Monitoring.MonitorTextFileOutput">
+            <summary>
+            Helper class that encapsulates temporary stream and final renaming for log entries streams.
+            This currently handles only the maximum count of entries per file but this may be extended with options like "SubFolderMode" that can be based 
+            on current time (to group logs inside timed intermediate folders like one per day: 2014/01/12 or 2014-01/12, etc.). 
+            </summary>
+        </member>
+        <member name="M:CK.Monitoring.MonitorTextFileOutput.#ctor(System.String,System.Int32,System.Boolean)">
+            <summary>
+            Initializes a new file for <see cref="T:CK.Monitoring.IMulticastLogEntry"/>: the final file name is based on <see cref="F:CK.Core.FileUtil.FileNameUniqueTimeUtcFormat"/> with a ".ckmon" extension.
+            You must call <see cref="M:CK.Monitoring.MonitorFileOutputBase.Initialize(CK.Core.IActivityMonitor)">Initialize</see> before actually using this object.
+            </summary>
+            <param name="configuredPath">The path: it can be absolute and when relative, it will be under <see cref="P:CK.Core.SystemActivityMonitor.RootLogPath"/> (that must be set).</param>
+            <param name="maxCountPerFile">Maximum number of entries per file. Must be greater than 1.</param>
+            <param name="useGzipCompression">True to gzip the file.</param>
+        </member>
+        <member name="M:CK.Monitoring.MonitorTextFileOutput.Write(CK.Monitoring.IMulticastLogEntry)">
+            <summary>
+            Writes a log entry.
+            </summary>
+            <param name="e">The log entry.</param>
+        </member>
+        <member name="M:CK.Monitoring.MonitorTextFileOutput.OpenNewFile">
+            <summary>
+            Called when a new file is created.
+            </summary>
+            <returns>The created stream.</returns>
+        </member>
+        <member name="M:CK.Monitoring.MonitorTextFileOutput.CloseCurrentFile">
+            <summary>
+            Called when the current file is closed.
+            </summary>
+        </member>
+        <member name="T:CK.Monitoring.CKMonWriterClient">
+            <summary>
+            This client writes .ckmon files for one monitor.
+            To close output file, simply <see cref="M:CK.Core.IActivityMonitorOutput.UnregisterClient(CK.Core.IActivityMonitorClient)">unregister</see> this client.
+            </summary>
+        </member>
+        <member name="M:CK.Monitoring.CKMonWriterClient.#ctor(System.String,System.Int32)">
+            <summary>
+            Initializes a new instance of <see cref="T:CK.Monitoring.CKMonWriterClient"/> that can be registered to write uncompressed .ckmon file for this monitor.
+            </summary>
+            <param name="path">The path. Can be absolute. When relative, it will be under <see cref="P:CK.Core.SystemActivityMonitor.RootLogPath"/> that must be set.</param>
+            <param name="maxCountPerFile">Maximum number of entries per file. Must be greater than 1.</param>
+        </member>
+        <member name="M:CK.Monitoring.CKMonWriterClient.#ctor(System.String,System.Int32,CK.Core.LogFilter,System.Boolean)">
+            <summary>
+            Initializes a new instance of <see cref="T:CK.Monitoring.CKMonWriterClient"/> that can be registered to write compressed or uncompressed .ckmon file for this monitor.
+            </summary>
+            <param name="path">The path. Can be absolute. When relative, it will be under <see cref="P:CK.Core.SystemActivityMonitor.RootLogPath"/> that must be set.</param>
+            <param name="maxCountPerFile">Maximum number of entries per file. Must be greater than 1.</param>
+            <param name="minimalFilter">Minimal filter for this client.</param>
+            <param name="useGzipCompression">Whether to output compressed .ckmon files. Defaults to false (do not compress).</param>
+        </member>
+        <member name="P:CK.Monitoring.CKMonWriterClient.MinimalFilter">
+            <summary>
+            Gets the minimal filter set by the constructor.
+            </summary>
+        </member>
+        <member name="M:CK.Monitoring.CKMonWriterClient.Open">
+            <summary>
+            Opens this writer if it is not already opened.
+            </summary>
+            <returns>True on success, false otherwise.</returns>
+        </member>
+        <member name="M:CK.Monitoring.CKMonWriterClient.Close">
+            <summary>
+            Closes this writer if it <see cref="P:CK.Monitoring.CKMonWriterClient.IsOpened"/>.
+            It can be re-<see cref="M:CK.Monitoring.CKMonWriterClient.Open"/>ed later.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.CKMonWriterClient.IsOpened">
+            <summary>
+            Gets whether this writer is opened.
+            </summary>
+        </member>
+        <member name="T:CK.Monitoring.LogEntry">
+            <summary>
+            Encapsulates <see cref="T:CK.Monitoring.ILogEntry"/> concrete objects manipulation.
+            </summary>
+        </member>
+        <member name="M:CK.Monitoring.LogEntry.CreateLog(System.String,CK.Core.DateTimeStamp,CK.Core.LogLevel,System.String,System.Int32,CK.Core.CKTrait,CK.Core.CKExceptionData)">
+            <summary>
+            Creates a <see cref="T:CK.Monitoring.ILogEntry"/> for a line.
+            </summary>
+            <param name="text">Text of the log entry.</param>
+            <param name="t">Time stamp of the log entry.</param>
+            <param name="level">Log level of the log entry.</param>
+            <param name="fileName">Source file name of the log entry</param>
+            <param name="lineNumber">Source line number of the log entry</param>
+            <param name="tags">Tags of the log entry</param>
+            <param name="ex">Exception of the log entry.</param>
+            <returns>A log entry object.</returns>
+        </member>
+        <member name="M:CK.Monitoring.LogEntry.CreateOpenGroup(System.String,CK.Core.DateTimeStamp,CK.Core.LogLevel,System.String,System.Int32,CK.Core.CKTrait,CK.Core.CKExceptionData)">
+            <summary>
+            Creates a <see cref="T:CK.Monitoring.ILogEntry"/> for an opened group.
+            </summary>
+            <param name="text">Text of the log entry.</param>
+            <param name="t">Time stamp of the log entry.</param>
+            <param name="level">Log level of the log entry.</param>
+            <param name="fileName">Source file name of the log entry</param>
+            <param name="lineNumber">Source line number of the log entry</param>
+            <param name="tags">Tags of the log entry</param>
+            <param name="ex">Exception of the log entry.</param>
+            <returns>A log entry object.</returns>
+        </member>
+        <member name="M:CK.Monitoring.LogEntry.CreateCloseGroup(CK.Core.DateTimeStamp,CK.Core.LogLevel,System.Collections.Generic.IReadOnlyList{CK.Core.ActivityLogGroupConclusion})">
+            <summary>
+            Creates a <see cref="T:CK.Monitoring.ILogEntry"/> for the closing of a group.
+            </summary>
+            <param name="t">Time stamp of the log entry.</param>
+            <param name="level">Log level of the log entry.</param>
+            <param name="c">Group conclusions.</param>
+            <returns>A log entry object.</returns>
+        </member>
+        <member name="M:CK.Monitoring.LogEntry.CreateMulticastLog(System.Guid,CK.Monitoring.LogEntryType,CK.Core.DateTimeStamp,System.Int32,System.String,CK.Core.DateTimeStamp,CK.Core.LogLevel,System.String,System.Int32,CK.Core.CKTrait,CK.Core.CKExceptionData)">
+            <summary>
+            Creates a <see cref="T:CK.Monitoring.ILogEntry"/> for a line.
+            </summary>
+            <param name="monitorId">Identifier of the monitor.</param>
+            <param name="previousEntryType">Log type of the previous entry in the monitor..</param>
+            <param name="previousLogTime">Time stamp of the previous entry in the monitor.</param>
+            <param name="depth">Depth of the line (number of opened groups above).</param>
+            <param name="text">Text of the log entry.</param>
+            <param name="t">Time stamp of the log entry.</param>
+            <param name="level">Log level of the log entry.</param>
+            <param name="fileName">Source file name of the log entry</param>
+            <param name="lineNumber">Source line number of the log entry</param>
+            <param name="tags">Tags of the log entry</param>
+            <param name="ex">Exception of the log entry.</param>
+            <returns>A log entry object.</returns>
+        </member>
+        <member name="M:CK.Monitoring.LogEntry.CreateMulticastOpenGroup(System.Guid,CK.Monitoring.LogEntryType,CK.Core.DateTimeStamp,System.Int32,System.String,CK.Core.DateTimeStamp,CK.Core.LogLevel,System.String,System.Int32,CK.Core.CKTrait,CK.Core.CKExceptionData)">
+            <summary>
+            Creates a <see cref="T:CK.Monitoring.ILogEntry"/> for an opened group.
+            </summary>
+            <param name="monitorId">Identifier of the monitor.</param>
+            <param name="previousEntryType">Log type of the previous entry in the monitor..</param>
+            <param name="previousLogTime">Time stamp of the previous entry in the monitor.</param>
+            <param name="depth">Depth of the line (number of opened groups above).</param>
+            <param name="text">Text of the log entry.</param>
+            <param name="t">Time stamp of the log entry.</param>
+            <param name="level">Log level of the log entry.</param>
+            <param name="fileName">Source file name of the log entry</param>
+            <param name="lineNumber">Source line number of the log entry</param>
+            <param name="tags">Tags of the log entry</param>
+            <param name="ex">Exception of the log entry.</param>
+            <returns>A log entry object.</returns>
+        </member>
+        <member name="M:CK.Monitoring.LogEntry.CreateMulticastCloseGroup(System.Guid,CK.Monitoring.LogEntryType,CK.Core.DateTimeStamp,System.Int32,CK.Core.DateTimeStamp,CK.Core.LogLevel,System.Collections.Generic.IReadOnlyList{CK.Core.ActivityLogGroupConclusion})">
+            <summary>
+            Creates a <see cref="T:CK.Monitoring.ILogEntry"/> for the closing of a group.
+            </summary>
+            <param name="monitorId">Identifier of the monitor.</param>
+            <param name="previousEntryType">Log type of the previous entry in the monitor..</param>
+            <param name="previousLogTime">Time stamp of the previous entry in the monitor.</param>
+            <param name="depth">Depth of the line (number of opened groups above).</param>
+            <param name="t">Time stamp of the log entry.</param>
+            <param name="level">Log level of the log entry.</param>
+            <param name="c">Group conclusions.</param>
+            <returns>A log entry object.</returns>
+        </member>
+        <member name="M:CK.Monitoring.LogEntry.WriteLog(CK.Core.CKBinaryWriter,System.Guid,CK.Monitoring.LogEntryType,CK.Core.DateTimeStamp,System.Int32,System.Boolean,CK.Core.LogLevel,CK.Core.DateTimeStamp,System.String,CK.Core.CKTrait,CK.Core.CKExceptionData,System.String,System.Int32)">
+            <summary>
+            Binary writes a multicast log entry.
+            </summary>
+            <param name="w">Binary writer to use.</param>
+            <param name="monitorId">Identifier of the monitor.</param>
+            <param name="previousEntryType">Log type of the previous entry in the monitor..</param>
+            <param name="previousLogTime">Time stamp of the previous entry in the monitor.</param>
+            <param name="depth">Depth of the line (number of opened groups above).</param>
+            <param name="isOpenGroup">True if this the opening of a group. False for a line.</param>
+            <param name="text">Text of the log entry.</param>
+            <param name="level">Log level of the log entry.</param>
+            <param name="logTime">Time stamp of the log entry.</param>
+            <param name="tags">Tags of the log entry</param>
+            <param name="ex">Exception of the log entry.</param>
+            <param name="fileName">Source file name of the log entry</param>
+            <param name="lineNumber">Source line number of the log entry</param>
+        </member>
+        <member name="M:CK.Monitoring.LogEntry.WriteLog(CK.Core.CKBinaryWriter,System.Boolean,CK.Core.LogLevel,CK.Core.DateTimeStamp,System.String,CK.Core.CKTrait,CK.Core.CKExceptionData,System.String,System.Int32)">
+            <summary>
+            Binary writes a log entry.
+            </summary>
+            <param name="w">Binary writer to use.</param>
+            <param name="isOpenGroup">True if this the opening of a group. False for a line.</param>
+            <param name="level">Log level of the log entry.</param>
+            <param name="text">Text of the log entry.</param>
+            <param name="logTime">Time stamp of the log entry.</param>
+            <param name="tags">Tags of the log entry</param>
+            <param name="ex">Exception of the log entry.</param>
+            <param name="fileName">Source file name of the log entry</param>
+            <param name="lineNumber">Source line number of the log entry</param>
+        </member>
+        <member name="M:CK.Monitoring.LogEntry.WriteCloseGroup(CK.Core.CKBinaryWriter,CK.Core.LogLevel,CK.Core.DateTimeStamp,System.Collections.Generic.IReadOnlyList{CK.Core.ActivityLogGroupConclusion})">
+            <summary>
+            Binary writes a closing entry.
+            </summary>
+            <param name="w">Binary writer to use.</param>
+            <param name="level">Log level of the log entry.</param>
+            <param name="closeTime">Time stamp of the group closing.</param>
+            <param name="conclusions">Group conclusions.</param>
+        </member>
+        <member name="M:CK.Monitoring.LogEntry.WriteCloseGroup(CK.Core.CKBinaryWriter,System.Guid,CK.Monitoring.LogEntryType,CK.Core.DateTimeStamp,System.Int32,CK.Core.LogLevel,CK.Core.DateTimeStamp,System.Collections.Generic.IReadOnlyList{CK.Core.ActivityLogGroupConclusion})">
+            <summary>
+            Binary writes a multicast closing entry.
+            </summary>
+            <param name="w">Binary writer to use.</param>
+            <param name="monitorId">Identifier of the monitor.</param>
+            <param name="previousEntryType">Log type of the previous entry in the monitor..</param>
+            <param name="previousLogTime">Time stamp of the previous entry in the monitor.</param>
+            <param name="depth">Depth of the group (number of opened groups above).</param>
+            <param name="level">Log level of the log entry.</param>
+            <param name="closeTime">Time stamp of the group closing.</param>
+            <param name="conclusions">Group conclusions.</param>
+        </member>
+        <member name="M:CK.Monitoring.LogEntry.Read(CK.Core.CKBinaryReader,System.Int32,System.Boolean@)">
+            <summary>
+            Reads a <see cref="T:CK.Monitoring.ILogEntry"/> from the binary reader that can be a <see cref="T:CK.Monitoring.IMulticastLogEntry"/>.
+            If the first read byte is 0, read stops and null is returned.
+            The 0 byte is the "end marker" that <see cref="M:CK.Monitoring.CKMonWriterClient.Close"/> write, but this
+            method can read non zero-terminated streams (it catches an EndOfStreamException when reading the first byte and handles it silently).
+            This method can throw any type of exception (<see cref="T:System.IO.EndOfStreamException"/> or <see cref="T:System.IO.InvalidDataException"/> for instance) that
+            must be handled by the caller.
+            </summary>
+            <param name="r">The binary reader.</param>
+            <param name="streamVersion">The version of the stream.</param>
+            <param name="badEndOfFile">True whenever the end of file is the result of an <see cref="T:System.IO.EndOfStreamException"/>.</param>
+            <returns>The log entry or null if a zero byte (end marker) has been found.</returns>
+        </member>
+        <member name="T:CK.Monitoring.LogReader">
+            <summary>
+            A log reader acts as an enumerator of <see cref="T:CK.Monitoring.ILogEntry"/> that are stored in a <see cref="T:System.IO.Stream"/>.
+            </summary>
+        </member>
+        <member name="F:CK.Monitoring.LogReader.CurrentStreamVersion">
+            <summary>
+            Current version stamp. Writes are done with this version, but reads MUST handle it.
+            The first released version is 5.
+            Version 7 supports the LogLevel.Debug level.
+            </summary>
+        </member>
+        <member name="F:CK.Monitoring.LogReader.FileHeader">
+            <summary>
+            The file header for .ckmon files starting from CurrentStreamVersion = 5.
+            That's C, K, M, O and N (ASCII).
+            </summary>
+        </member>
+        <member name="M:CK.Monitoring.LogReader.#ctor(System.IO.Stream,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Initializes a new <see cref="T:CK.Monitoring.LogReader"/> on an uncompressed stream with an explicit version number.
+            </summary>
+            <param name="stream">Stream to read logs from.</param>
+            <param name="streamVersion">Version of the log stream.</param>
+            <param name="headerLength">Length of the header. This will be substracted to the actual stream position to compute the <see cref="P:CK.Monitoring.LogReader.StreamOffset"/>.</param>
+            <param name="mustClose">
+            Defaults to true (the stream will be automatically closed).
+            False to let the stream opened once this reader is disposed, the end of the log data is reached or an error is encountered.
+            </param>
+        </member>
+        <member name="M:CK.Monitoring.LogReader.Open(System.String,System.Int64,CK.Monitoring.LogReader.MulticastFilter)">
+            <summary>
+            Opens a <see cref="T:CK.Monitoring.LogReader"/> to read the content of a compressed or uncompressed file.
+            The file will be closed when <see cref="M:CK.Monitoring.LogReader.Dispose"/> will be called.
+            </summary>
+            <param name="path">Path of the log file.</param>
+            <param name="dataOffset">
+            An optional offset where the stream position must be initially set: this is the position of an entry in the actual (potentially uncompressed stream),
+            not the offset in the original stream.
+            </param>
+            <param name="filter">An optional <see cref="T:CK.Monitoring.LogReader.MulticastFilter"/>.</param>
+            <returns>A <see cref="T:CK.Monitoring.LogReader"/> that will close the file when disposed.</returns>
+            <remarks>
+            .ckmon files exist in different file versions, depending on headers.
+            The file can be compressed using GZipStream, in which case the header will be the magic GZIP header: 1F 8B.
+            New header (applies to version 5), the file will start with 43 4B 4D 4F 4E (CKMON in ASCII), followed by the version number, instead of only the version number.
+            </remarks>
+        </member>
+        <member name="M:CK.Monitoring.LogReader.Open(System.IO.Stream,System.Int64,CK.Monitoring.LogReader.MulticastFilter)">
+            <summary>
+            Opens a <see cref="T:CK.Monitoring.LogReader"/> to read the content of a compressed or uncompressed stream.
+            The stream will be closed when <see cref="M:CK.Monitoring.LogReader.Dispose"/> will be called.
+            </summary>
+            <param name="seekableStream">Stream that must support Seek operations (<see cref="P:System.IO.Stream.CanSeek"/> must be true).</param>
+            <param name="dataOffset">
+            An optional offset where the stream position must be initially set: this is the position of an entry in the actual (potentially uncompressed stream),
+            not the offset in the original stream.
+            </param>
+            <param name="filter">An optional <see cref="T:CK.Monitoring.LogReader.MulticastFilter"/>.</param>
+            <returns>A <see cref="T:CK.Monitoring.LogReader"/> that will close the file when disposed.</returns>
+            <remarks>
+            .ckmon files exist in different file versions, depending on headers.
+            The file can be compressed using GZipStream, in which case the header will be the magic GZIP header: 1F 8B.
+            New header (applies to version 5), the file will start with 43 4B 4D 4F 4E (CKMON in ASCII), followed by the version number, instead of only the version number.
+            </remarks>
+        </member>
+        <member name="T:CK.Monitoring.LogReader.MulticastFilter">
+            <summary>
+            Enables filtering of a multi-cast stream: only entries from the specified monitor will be read. 
+            </summary>
+        </member>
+        <member name="F:CK.Monitoring.LogReader.MulticastFilter.MonitorId">
+            <summary>
+            The filtered monitor identifier.
+            </summary>
+        </member>
+        <member name="F:CK.Monitoring.LogReader.MulticastFilter.KnownLastMonitorEntryOffset">
+            <summary>
+            The offset of the last entry in the stream (see <see cref="P:CK.Monitoring.LogReader.StreamOffset"/>).
+            <see cref="F:System.Int64.MaxValue"/> when unknown.
+            </summary>
+        </member>
+        <member name="M:CK.Monitoring.LogReader.MulticastFilter.#ctor(System.Guid,System.Int64)">
+            <summary>
+            Initializes a new <see cref="T:CK.Monitoring.LogReader.MulticastFilter"/>.
+            </summary>
+            <param name="monitorId">Monitor identifier to filter.</param>
+            <param name="knownLastMonitorEntryOffset">Offset of the last entry in the stream (when known this enables to stop processing as soon as possible).</param>
+        </member>
+        <member name="P:CK.Monitoring.LogReader.CurrentFilter">
+            <summary>
+            Gets or sets a <see cref="T:CK.Monitoring.LogReader.MulticastFilter"/> that will be taken into account during the next <see cref="M:CK.Monitoring.LogReader.MoveNext"/>.
+            Only entries from this monitor will be extracted when reading a <see cref="T:CK.Monitoring.IMulticastLogEntry"/> (pure unicast <see cref="T:CK.Monitoring.ILogEntry"/> will be ignored).
+            </summary>
+            <remarks>
+            Note that the <see cref="P:CK.Monitoring.LogReader.Current"/> will be <see cref="T:CK.Monitoring.ILogEntry"/> objects: multi-cast entry properties (<see cref="P:CK.Monitoring.IMulticastLogInfo.MonitorId"/> 
+            and <see cref="P:CK.Monitoring.IMulticastLogEntry.GroupDepth"/>) are no more available when a filter is set.
+            </remarks>
+        </member>
+        <member name="P:CK.Monitoring.LogReader.StreamVersion">
+            <summary>
+            Gets the stream version. It is available only after the first call to <see cref="M:CK.Monitoring.LogReader.MoveNext"/>.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.LogReader.Current">
+            <summary>
+            Current <see cref="T:CK.Monitoring.ILogEntry"/> that can be a <see cref="T:CK.Monitoring.IMulticastLogEntry"/>.
+            As usual, <see cref="M:CK.Monitoring.LogReader.MoveNext"/> must be called before getting the first entry.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.LogReader.CurrentMulticast">
+            <summary>
+            Gets the <see cref="P:CK.Monitoring.LogReader.Current"/> entry if the underlying entry is a <see cref="T:CK.Monitoring.IMulticastLogEntry"/>, null otherwise.
+            This captures the actual entry when a <see cref="P:CK.Monitoring.LogReader.CurrentFilter"/> is set (Current is then a mere Unicast entry).
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.LogReader.ReadException">
+            <summary>
+            Gets the exception that may have been thrown when reading the file.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.LogReader.BadEndOfFileMarker">
+            <summary>
+            Gets whether the end of file has been reached and the file is missing the final 0 byte marker.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.LogReader.CurrentMulticastWithOffset">
+            <summary>
+            Current <see cref="T:CK.Monitoring.IMulticastLogEntry"/> with its associated position in the stream.
+            The current entry must be a multi-cast one and, as usual, <see cref="M:CK.Monitoring.LogReader.MoveNext"/> must be called before getting the first entry.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.LogReader.StreamOffset">
+            <summary>
+            Gets the inner <see cref="P:System.IO.Stream.Position"/> of the <see cref="P:CK.Monitoring.LogReader.Current"/> entry.
+            </summary>
+        </member>
+        <member name="M:CK.Monitoring.LogReader.MoveNext">
+            <summary>
+            Attempts to read the next <see cref="T:CK.Monitoring.ILogEntry"/>.
+            </summary>
+            <returns>True on success, false otherwise.</returns>
+        </member>
+        <member name="M:CK.Monitoring.LogReader.Dispose">
+            <summary>
+            Close the inner stream (.Net 4.5 only: if this reader has been asked to do so thanks to constructors' parameter mustClose sets to true).
+            </summary>
+        </member>
+        <member name="T:CK.Monitoring.LogReaderStreamInfo">
+            <summary>
+            Container for an uncompressed log stream and other meta-information.
+            </summary>
+        </member>
+        <member name="F:CK.Monitoring.LogReaderStreamInfo.LogStream">
+            <summary>
+            Gets the log stream: it is opened and uncompressed. Its position is before the version number if Version is equal to -1; otherwise, it is after.
+            </summary>
+            <value>
+            </value>
+        </member>
+        <member name="F:CK.Monitoring.LogReaderStreamInfo.IsCompressed">
+            <summary>
+            Gets a value indicating whether the log stream is contained in a compressed stream.
+            <c>true</c> if the log stream is contained in a compressed stream; otherwise, <c>false</c>.
+            </summary>
+        </member>
+        <member name="F:CK.Monitoring.LogReaderStreamInfo.Version">
+            <summary>
+            The version.
+            </summary>
+        </member>
+        <member name="F:CK.Monitoring.LogReaderStreamInfo.HeaderLength">
+            <summary>
+            The length of the version header.
+            </summary>
+        </member>
+        <member name="M:CK.Monitoring.LogReaderStreamInfo.OpenStream(System.IO.Stream)">
+            <summary>
+            Opens a log stream, handling version and compression.
+            On success, its Stream positionned after the header (before the first log entry).
+            Supports headers:
+            - Old version header (05 00 00 00)
+            - CKMOD header (43 4B 4D 4F 4E) followed by version
+            - RFC 1952 GZIP header (1F 8B), will be handled automatically by: a GZip stream reader will be created.
+            </summary>
+            <param name="seekableStream">Log stream to read.</param>
+            <returns>LogReader information.</returns>
+        </member>
+        <member name="T:CK.Monitoring.MulticastLogEntryWithOffset">
+            <summary>
+            Immutable capture of a log <see cref="F:CK.Monitoring.MulticastLogEntryWithOffset.Entry"/> and its <see cref="F:CK.Monitoring.MulticastLogEntryWithOffset.Offset"/>.
+            </summary>
+        </member>
+        <member name="F:CK.Monitoring.MulticastLogEntryWithOffset.Entry">
+            <summary>
+            The log entry.
+            </summary>
+        </member>
+        <member name="F:CK.Monitoring.MulticastLogEntryWithOffset.Offset">
+            <summary>
+            The entry's offset.
+            </summary>
+        </member>
+        <member name="M:CK.Monitoring.MulticastLogEntryWithOffset.#ctor(CK.Monitoring.IMulticastLogEntry,System.Int64)">
+            <summary>
+            Initializes a new <see cref="T:CK.Monitoring.MulticastLogEntryWithOffset"/>.
+            </summary>
+            <param name="e">The entry.</param>
+            <param name="o">The offset.</param>
+        </member>
+        <member name="T:CK.Monitoring.MultiLogReader">
+            <summary>
+            This reader process multiples .ckmon files (possibly in different steps: it internally aggregates the result) and can 
+            create <see cref="T:CK.Monitoring.MultiLogReader.ActivityMap"/> objects on demand.
+            It is a thread safe object (the ActivityMap is immutable).
+            </summary>
+        </member>
+        <member name="T:CK.Monitoring.MultiLogReader.ActivityMap">
+            <summary>
+            Immutable snapshot of a <see cref="T:CK.Monitoring.MultiLogReader"/>'s content.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.MultiLogReader.ActivityMap.FirstEntryDate">
+            <summary>
+            Gets the very first entry time (among all <see cref="P:CK.Monitoring.MultiLogReader.ActivityMap.Monitors"/>).
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.MultiLogReader.ActivityMap.LastEntryDate">
+            <summary>
+            Gets the very last entry time (among all <see cref="P:CK.Monitoring.MultiLogReader.ActivityMap.Monitors"/>).
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.MultiLogReader.ActivityMap.ValidFiles">
+            <summary>
+            Gets the valid files (see <see cref="P:CK.Monitoring.MultiLogReader.RawLogFile.IsValidFile"/>).
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.MultiLogReader.ActivityMap.AllFiles">
+            <summary>
+            Gets all files (even the ones for which <see cref="P:CK.Monitoring.MultiLogReader.RawLogFile.IsValidFile"/> is false).
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.MultiLogReader.ActivityMap.Monitors">
+            <summary>
+            Gets all the monitors that this ActivityMap contains ordered by their <see cref="P:CK.Monitoring.MultiLogReader.Monitor.FirstEntryTime"/>.
+            </summary>
+        </member>
+        <member name="M:CK.Monitoring.MultiLogReader.ActivityMap.FindMonitor(System.Guid)">
+            <summary>
+            Finds a <see cref="T:CK.Monitoring.MultiLogReader.Monitor"/> by its identifier.
+            </summary>
+            <param name="monitorId">The monitor's identifier.</param>
+            <returns>The monitor or null if not found.</returns>
+        </member>
+        <member name="T:CK.Monitoring.MultiLogReader.Monitor">
+            <summary>
+            Immutable information that describes one monitor's content.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.MultiLogReader.Monitor.MonitorId">
+            <summary>
+            Gets the monitor's identifier.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.MultiLogReader.Monitor.Files">
+            <summary>
+            Gets the different files where entries from this monitor appear.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.MultiLogReader.Monitor.FirstEntryTime">
+            <summary>
+            Gets the very first known entry time for this monitor.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.MultiLogReader.Monitor.FirstDepth">
+            <summary>
+            Gets the very first known depth for this monitor.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.MultiLogReader.Monitor.LastEntryTime">
+            <summary>
+            Gets the very last known entry time for this monitor.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.MultiLogReader.Monitor.LastDepth">
+            <summary>
+            Gets the very last known depth for this monitor.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.MultiLogReader.Monitor.AllTags">
+            <summary>
+            Gets the weighted occurrences of each tags that have been logged in this monitor.
+            </summary>
+        </member>
+        <member name="M:CK.Monitoring.MultiLogReader.Monitor.MultiFileReader.OneLogReader.CompareHeadTime(CK.Monitoring.MultiLogReader.Monitor.MultiFileReader.OneLogReader,CK.Monitoring.MultiLogReader.Monitor.MultiFileReader.OneLogReader)">
+            <summary>
+            Compares Head.Entry.LogTime. 
+            </summary>
+        </member>
+        <member name="T:CK.Monitoring.MultiLogReader.Monitor.LivePage">
+            <summary>
+            A disposable paged reader that gives access to <see cref="P:CK.Monitoring.MultiLogReader.Monitor.LivePage.Entries"/> by unifying all the raw log 
+            files and removing duplicates from them.
+            Pages are sequentially accessed from a first page (obtained by <see cref="M:CK.Monitoring.MultiLogReader.Monitor.ReadFirstPage(CK.Core.DateTimeStamp,System.Int32)"/>) and the by calling <see cref="M:CK.Monitoring.MultiLogReader.Monitor.LivePage.ForwardPage"/>.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.MultiLogReader.Monitor.LivePage.Entries">
+            <summary>
+            Gets the log entries of the current page.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.MultiLogReader.Monitor.LivePage.PageLength">
+            <summary>
+            Gets the page length. 
+            </summary>
+        </member>
+        <member name="M:CK.Monitoring.MultiLogReader.Monitor.LivePage.ForwardPage">
+            <summary>
+            Loads the next page and returns the number of available entries.
+            </summary>
+            <returns>The number of entries.</returns>
+        </member>
+        <member name="M:CK.Monitoring.MultiLogReader.Monitor.LivePage.Dispose">
+            <summary>
+            Closes all resources.
+            </summary>
+        </member>
+        <member name="M:CK.Monitoring.MultiLogReader.Monitor.ReadFirstPage(System.Int32)">
+            <summary>
+            Loads the first available entries.
+            </summary>
+            <param name="pageLength">The length of pages. Must be greater than 0.</param>
+            <returns>The first <see cref="T:CK.Monitoring.MultiLogReader.Monitor.LivePage"/> from which next pages can be retrieved.</returns>
+        </member>
+        <member name="M:CK.Monitoring.MultiLogReader.Monitor.ReadFirstPage(CK.Core.DateTimeStamp,System.Int32)">
+            <summary>
+            Loads the first available entries starting at a given time.
+            </summary>
+            <param name="firstLogTime">The first log time.</param>
+            <param name="pageLength">The length of pages. Must be greater than 0.</param>
+            <returns>The first <see cref="T:CK.Monitoring.MultiLogReader.Monitor.LivePage"/> from which next pages can be retrieved.</returns>
+        </member>
+        <member name="M:CK.Monitoring.MultiLogReader.Monitor.ReadAllEntries(System.Int32)">
+            <summary>
+            Retrieves all entries for this monitor.
+            </summary>
+            <param name="pageLength">Page length.</param>
+            <returns>All log entries in order for this Monitor.</returns>
+        </member>
+        <member name="M:CK.Monitoring.MultiLogReader.Monitor.Replay(CK.Core.IActivityMonitor,CK.Core.IActivityMonitor)">
+            <summary>
+            Replays this monitor's content into another monitor.
+            </summary>
+            <param name="replay">The target monitor. Can not be null.</param>
+            <param name="m">Optional monitor (nothing is logged when null).</param>
+        </member>
+        <member name="M:CK.Monitoring.MultiLogReader.GetActivityMap">
+            <summary>
+            Gets the <see cref="T:CK.Monitoring.MultiLogReader.ActivityMap"/> from this reader.
+            </summary>
+            <returns>An immutable snapshot of this reader's content.</returns>
+        </member>
+        <member name="T:CK.Monitoring.MultiLogReader.RawLogFileMonitorOccurence">
+            <summary>
+            Immutable object that describes the occurrence of a Monitor in a <see cref="T:CK.Monitoring.MultiLogReader.RawLogFile"/>.
+            </summary>
+        </member>
+        <member name="F:CK.Monitoring.MultiLogReader.RawLogFileMonitorOccurence.LogFile">
+            <summary>
+            The <see cref="T:CK.Monitoring.MultiLogReader.RawLogFile"/>.
+            </summary>
+        </member>
+        <member name="F:CK.Monitoring.MultiLogReader.RawLogFileMonitorOccurence.MonitorId">
+            <summary>
+            The monitor's identifier.
+            </summary>
+        </member>
+        <member name="F:CK.Monitoring.MultiLogReader.RawLogFileMonitorOccurence.FirstOffset">
+            <summary>
+            First offset for this <see cref="F:CK.Monitoring.MultiLogReader.RawLogFileMonitorOccurence.MonitorId"/> in this <see cref="F:CK.Monitoring.MultiLogReader.RawLogFileMonitorOccurence.LogFile"/>.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.MultiLogReader.RawLogFileMonitorOccurence.LastOffset">
+            <summary>
+            Last offset for this <see cref="F:CK.Monitoring.MultiLogReader.RawLogFileMonitorOccurence.MonitorId"/> in this <see cref="F:CK.Monitoring.MultiLogReader.RawLogFileMonitorOccurence.LogFile"/>.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.MultiLogReader.RawLogFileMonitorOccurence.FirstEntryTime">
+            <summary>
+            First entry time for this <see cref="F:CK.Monitoring.MultiLogReader.RawLogFileMonitorOccurence.MonitorId"/> in this <see cref="F:CK.Monitoring.MultiLogReader.RawLogFileMonitorOccurence.LogFile"/>.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.MultiLogReader.RawLogFileMonitorOccurence.LastEntryTime">
+            <summary>
+            Last entry time for this <see cref="F:CK.Monitoring.MultiLogReader.RawLogFileMonitorOccurence.MonitorId"/> in this <see cref="F:CK.Monitoring.MultiLogReader.RawLogFileMonitorOccurence.LogFile"/>.
+            </summary>
+        </member>
+        <member name="M:CK.Monitoring.MultiLogReader.RawLogFileMonitorOccurence.CreateFilteredReader(System.Int64)">
+            <summary>
+            Creates and opens a <see cref="T:CK.Monitoring.LogReader"/> that reads unicast entries only from this monitor.
+            The reader is initially positioned before the entry (i.e. <see cref="M:CK.Monitoring.LogReader.MoveNext"/> must be called).
+            </summary>
+            <param name="streamOffset">Initial stream position.</param>
+            <returns>A log reader that will read only entries from this monitor.</returns>
+        </member>
+        <member name="M:CK.Monitoring.MultiLogReader.RawLogFileMonitorOccurence.CreateFilteredReaderAndMoveTo(CK.Core.DateTimeStamp)">
+            <summary>
+            Opens a <see cref="T:CK.Monitoring.LogReader"/> that reads unicast entries only from this monitor and positions it on the first entry
+            with the given time (i.e. <see cref="M:CK.Monitoring.LogReader.MoveNext"/> has been called).
+            </summary>
+            <param name="logTime">Log time. Must exist in the stream otherwise an exception is thrown.</param>
+            <returns>A log reader that will read only entries from this monitor.</returns>
+        </member>
+        <member name="T:CK.Monitoring.MultiLogReader.RawLogFile">
+            <summary>
+            Immutable object that contains a description of the content of a raw log file.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.MultiLogReader.RawLogFile.FileName">
+            <summary>
+            Gets the file name.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.MultiLogReader.RawLogFile.FirstEntryTime">
+            <summary>
+            Gets the first entry time.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.MultiLogReader.RawLogFile.LastEntryTime">
+            <summary>
+            Gets the last entry time.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.MultiLogReader.RawLogFile.FileVersion">
+            <summary>
+            Gets the file version.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.MultiLogReader.RawLogFile.TotalEntryCount">
+            <summary>
+            Gets the total number of entries.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.MultiLogReader.RawLogFile.BadEndOfFile">
+            <summary>
+            Gets whether this file does not end with the end of stream marker (a zero byte).
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.MultiLogReader.RawLogFile.IsValidFile">
+            <summary>
+            Gets whether no <see cref="P:CK.Monitoring.MultiLogReader.RawLogFile.Error"/> occurred and there is no <see cref="P:CK.Monitoring.MultiLogReader.RawLogFile.BadEndOfFile"/>.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.MultiLogReader.RawLogFile.Error">
+            <summary>
+            Gets the <see cref="T:System.Exception"/> that occurred while reading file.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.MultiLogReader.RawLogFile.Monitors">
+            <summary>
+            Gets the different monitors that appear in this file.
+            </summary>
+        </member>
+        <member name="M:CK.Monitoring.MultiLogReader.RawLogFile.ToString">
+            <summary>
+            Overridden to return details about its content.
+            </summary>
+            <returns>Detailed string.</returns>
+        </member>
+        <member name="M:CK.Monitoring.MultiLogReader.#ctor">
+            <summary>
+            Initializes a new <see cref="T:CK.Monitoring.MultiLogReader"/>.
+            </summary>
+        </member>
+        <member name="M:CK.Monitoring.MultiLogReader.Add(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Adds a bunch of log files.
+            </summary>
+            <param name="files">Set of files to add.</param>
+            <returns>List of newly added files (already known files are skipped).</returns>
+        </member>
+        <member name="M:CK.Monitoring.MultiLogReader.Add(System.String,System.Boolean@)">
+            <summary>
+            Adds a file to this reader. This is thread safe (can be called from any thread at any time). 
+            </summary>
+            <param name="filePath">The path of the file to add.</param>
+            <param name="newFileIndex">True if the file has actually been added, false it it was already added.</param>
+            <returns>The RawLogFile object (newly created or already existing).</returns>
+        </member>
+        <member name="M:CK.Monitoring.MultiLogReader.Dispose">
+            <summary>
+            Releases this reader.
+            </summary>
+        </member>
+        <member name="T:CK.Monitoring.ParentedLogEntry">
+            <summary>
+            Parented log entry binds an entry to its parent group and can be a missing entry (a line or group opening or closing that we know it exists
+            but have no data for it or only their <see cref="P:CK.Monitoring.ILogEntry.LogTime"/>).
+            </summary>
+        </member>
+        <member name="F:CK.Monitoring.ParentedLogEntry.Parent">
+            <summary>
+            Parent entry. Null when there is no group above.
+            </summary>
+        </member>
+        <member name="F:CK.Monitoring.ParentedLogEntry.Entry">
+            <summary>
+            The entry itself.
+            </summary>
+        </member>
+        <member name="P:CK.Monitoring.ParentedLogEntry.IsMissing">
+            <summary>
+            Gets whether this is actually a missing entry (it can be a group opening, closing or a mere line): we do not have data for it, except, may be its <see cref="P:CK.Monitoring.ILogEntry.LogTime"/>
+            (if the log time is not known, the <see cref="F:CK.Monitoring.ParentedLogEntry.Entry"/>'s <see cref="P:CK.Monitoring.ILogEntry.LogTime">LogTime</see> is <see cref="F:CK.Core.DateTimeStamp.Unknown"/>).
+            </summary>
+        </member>
+        <member name="M:CK.Monitoring.ParentedLogEntry.GetPath(System.Collections.Generic.List{CK.Monitoring.ILogEntry},System.Boolean)">
+            <summary>
+            Collects path of <see cref="T:CK.Monitoring.ILogEntry"/> in a reusable list (the buffer is <see cref="M:System.Collections.Generic.List`1.Clear">cleared</see> first).
+            </summary>
+            <param name="reusableBuffer">List that will be cleared and filled with parents.</param>
+            <param name="addThis">Set it to true to append to also add this entry.</param>
+        </member>
+        <member name="M:CK.Monitoring.ParentedLogEntry.CollectPath(System.Action{CK.Monitoring.ParentedLogEntry},System.Boolean)">
+            <summary>
+            Collects the path of this <see cref="T:CK.Monitoring.ParentedLogEntry"/>, optionally terminated with this entry.
+            </summary>
+            <param name="collector">Action for each item.</param>
+            <param name="addThis">Set it to true to append to also call the collector with this entry.</param>
+        </member>
+    </members>
+</doc>
