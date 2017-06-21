@@ -14,14 +14,14 @@ export class LogSearcherComponent implements OnInit {
   constructor(private LogSearcherService: LogSearcherService) { }
 
   ngOnInit() {
-    this.GetAll(20);
+    this.GetAllLog(20);
   }
 
   async Search(query:string) {
     await this.LogSearcherService.Search(query).subscribe(data => this.data = data as Array<ILogView>);
   }
 
-  async GetAll(maxLogToReturn:number) {
-    await this.LogSearcherService.GetAll(maxLogToReturn).subscribe(data => this.data = data as Array<ILogView>);
+  async GetAllLog(maxLogToReturn:number) {
+    await this.LogSearcherService.GetAllLog(maxLogToReturn).subscribe(data => this.data = data as Array<ILogView>);
   }
 }
