@@ -1,12 +1,14 @@
 {
-  "name": "electron-quick-start",
-  "version": "1.0.0",
-  "description": "A minimal Electron application",
+  "name": "glouton-electron-app",
+  "version": "0.0.1",
+  "description": "Minimal application to launch Glouton.SPA",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=assets/icons/glouton.jpg --prune=true --out=release-builds",
+    "package-win": "electron-packager . --asar=true --platform=win32 --arch=x64 --icon=assets/icons/glouton.ico --prune=true --out=release-builds --extra-resource=api --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Glouton Log Viewer\"",
+    "package-linux": "electron-packager . --overwrite --platform=linux --arch=x64 --icon=assets/icons/glouton.png --prune=true --out=release-builds"
   },
-  "repository": "https://github.com/electron/electron-quick-start",
   "keywords": [
     "Electron",
     "quick",
@@ -17,6 +19,7 @@
   "author": "GitHub",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "~1.6.2"
+    "electron": "~1.6.2",
+    "electron-packager": "^8.7.1"
   }
 }

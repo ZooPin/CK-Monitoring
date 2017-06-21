@@ -8,18 +8,17 @@ const path = require('path')
 const url = require('url')
 var exec = require('child_process').spawn;
 var executablePath = "./api/win10-x64/Glouton.SPA.exe";
-var api = exec(executablePath);
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
+let api = {}
 
 function startApi() {
   //  run server
-  var apipath = path.join(__dirname, '//api//win10-x64//Glouton.SPA.exe')
-  apiProcess = exec(apipath)
-  apiProcess.stdout.on('data', (data) => {
-    console.log(data)
+  api.path = path.join(__dirname, '//api//win10-x64//Glouton.SPA.exe')
+  api.process = exec(api.path)
+  api.process.stdout.on('data', (data) => {
     if (mainWindow == null) {
       createWindow();
     }
@@ -46,7 +45,7 @@ function createWindow() {
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
     mainWindow = null
-    api.kill();
+    api.process.kill();
   })
 }
 
