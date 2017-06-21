@@ -35,14 +35,16 @@
             this.textBoxLine = new System.Windows.Forms.TextBox();
             this.buttonSendException = new System.Windows.Forms.Button();
             this.checkBoxIsLoaderException = new System.Windows.Forms.CheckBox();
+            this.buttonAggEx = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // buttonOpenGroup
             // 
             this.buttonOpenGroup.AutoSize = true;
-            this.buttonOpenGroup.Location = new System.Drawing.Point(245, 93);
+            this.buttonOpenGroup.Location = new System.Drawing.Point(184, 74);
+            this.buttonOpenGroup.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.buttonOpenGroup.Name = "buttonOpenGroup";
-            this.buttonOpenGroup.Size = new System.Drawing.Size(139, 35);
+            this.buttonOpenGroup.Size = new System.Drawing.Size(107, 30);
             this.buttonOpenGroup.TabIndex = 0;
             this.buttonOpenGroup.Text = "Open Group";
             this.buttonOpenGroup.UseVisualStyleBackColor = true;
@@ -51,9 +53,10 @@
             // buttonCloseGroup
             // 
             this.buttonCloseGroup.AutoSize = true;
-            this.buttonCloseGroup.Location = new System.Drawing.Point(399, 93);
+            this.buttonCloseGroup.Location = new System.Drawing.Point(299, 74);
+            this.buttonCloseGroup.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.buttonCloseGroup.Name = "buttonCloseGroup";
-            this.buttonCloseGroup.Size = new System.Drawing.Size(142, 35);
+            this.buttonCloseGroup.Size = new System.Drawing.Size(108, 30);
             this.buttonCloseGroup.TabIndex = 1;
             this.buttonCloseGroup.Text = "Close Group";
             this.buttonCloseGroup.UseVisualStyleBackColor = true;
@@ -62,9 +65,10 @@
             // buttonSendLine
             // 
             this.buttonSendLine.AutoSize = true;
-            this.buttonSendLine.Location = new System.Drawing.Point(576, 183);
+            this.buttonSendLine.Location = new System.Drawing.Point(432, 146);
+            this.buttonSendLine.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.buttonSendLine.Name = "buttonSendLine";
-            this.buttonSendLine.Size = new System.Drawing.Size(119, 35);
+            this.buttonSendLine.Size = new System.Drawing.Size(91, 30);
             this.buttonSendLine.TabIndex = 2;
             this.buttonSendLine.Text = "Send Line";
             this.buttonSendLine.UseVisualStyleBackColor = true;
@@ -73,7 +77,7 @@
             // listLogLevel
             // 
             this.listLogLevel.FormattingEnabled = true;
-            this.listLogLevel.ItemHeight = 25;
+            this.listLogLevel.ItemHeight = 20;
             this.listLogLevel.Items.AddRange(new object[] {
             "Trace",
             "Info",
@@ -81,24 +85,27 @@
             "Error",
             "Fatal",
             "Debug"});
-            this.listLogLevel.Location = new System.Drawing.Point(102, 72);
+            this.listLogLevel.Location = new System.Drawing.Point(76, 58);
+            this.listLogLevel.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.listLogLevel.Name = "listLogLevel";
-            this.listLogLevel.Size = new System.Drawing.Size(120, 154);
+            this.listLogLevel.Size = new System.Drawing.Size(91, 124);
             this.listLogLevel.TabIndex = 3;
             // 
             // textBoxLine
             // 
-            this.textBoxLine.Location = new System.Drawing.Point(263, 183);
+            this.textBoxLine.Location = new System.Drawing.Point(197, 146);
+            this.textBoxLine.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.textBoxLine.Name = "textBoxLine";
-            this.textBoxLine.Size = new System.Drawing.Size(294, 31);
+            this.textBoxLine.Size = new System.Drawing.Size(222, 26);
             this.textBoxLine.TabIndex = 4;
             // 
             // buttonSendException
             // 
             this.buttonSendException.AutoSize = true;
-            this.buttonSendException.Location = new System.Drawing.Point(558, 93);
+            this.buttonSendException.Location = new System.Drawing.Point(418, 74);
+            this.buttonSendException.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.buttonSendException.Name = "buttonSendException";
-            this.buttonSendException.Size = new System.Drawing.Size(173, 35);
+            this.buttonSendException.Size = new System.Drawing.Size(131, 30);
             this.buttonSendException.TabIndex = 5;
             this.buttonSendException.Text = "Send Exception";
             this.buttonSendException.UseVisualStyleBackColor = true;
@@ -107,18 +114,31 @@
             // checkBoxIsLoaderException
             // 
             this.checkBoxIsLoaderException.AutoSize = true;
-            this.checkBoxIsLoaderException.Location = new System.Drawing.Point(576, 46);
+            this.checkBoxIsLoaderException.Location = new System.Drawing.Point(432, 37);
+            this.checkBoxIsLoaderException.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.checkBoxIsLoaderException.Name = "checkBoxIsLoaderException";
-            this.checkBoxIsLoaderException.Size = new System.Drawing.Size(234, 29);
+            this.checkBoxIsLoaderException.Size = new System.Drawing.Size(176, 24);
             this.checkBoxIsLoaderException.TabIndex = 6;
             this.checkBoxIsLoaderException.Text = "Is Loader Exception";
             this.checkBoxIsLoaderException.UseVisualStyleBackColor = true;
             // 
+            // buttonAggEx
+            // 
+            this.buttonAggEx.AutoSize = true;
+            this.buttonAggEx.Location = new System.Drawing.Point(554, 74);
+            this.buttonAggEx.Name = "buttonAggEx";
+            this.buttonAggEx.Size = new System.Drawing.Size(108, 30);
+            this.buttonAggEx.TabIndex = 7;
+            this.buttonAggEx.Text = "Send AggEx";
+            this.buttonAggEx.UseVisualStyleBackColor = true;
+            this.buttonAggEx.Click += new System.EventHandler(this.buttonAggEx_Click);
+            // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(920, 332);
+            this.ClientSize = new System.Drawing.Size(690, 266);
+            this.Controls.Add(this.buttonAggEx);
             this.Controls.Add(this.checkBoxIsLoaderException);
             this.Controls.Add(this.buttonSendException);
             this.Controls.Add(this.textBoxLine);
@@ -126,6 +146,7 @@
             this.Controls.Add(this.buttonSendLine);
             this.Controls.Add(this.buttonCloseGroup);
             this.Controls.Add(this.buttonOpenGroup);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "Form1";
             this.Text = "Form1";
             this.ResumeLayout(false);
@@ -142,6 +163,7 @@
         private System.Windows.Forms.TextBox textBoxLine;
         private System.Windows.Forms.Button buttonSendException;
         private System.Windows.Forms.CheckBox checkBoxIsLoaderException;
+        private System.Windows.Forms.Button buttonAggEx;
     }
 }
 

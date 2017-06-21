@@ -90,5 +90,10 @@ namespace Glouton.LogGenerator
         {
             Monitor.Fatal().Send(ExceptionGenerator.ThrowExceptionWithInner(checkBoxIsLoaderException.Checked));
         }
+
+        private void buttonAggEx_Click(object sender, EventArgs e)
+        {
+            Monitor.Fatal().Send(ExceptionGenerator.ThrowAggregateException(3));
+        }
     }
 }
