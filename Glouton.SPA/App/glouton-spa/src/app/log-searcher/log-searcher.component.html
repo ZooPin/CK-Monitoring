@@ -8,7 +8,7 @@
     <div class="panel panel-default">
       <div class="panel-heading"><span class="label label-default">{{log.logLevel}}</span> <span class="label label-default">{{log.tags}}</span></div>
       <div class="panel-body">
-        <p>{{log.Text}}</p>
+        <strong><p>{{log.text}}</p></strong>
         <p>{{log.sourceFileName}}</p>
         <p>{{log.logTime}}</p>
         <div *ngIf="log.exception" class="alert alert-danger" role="alert">

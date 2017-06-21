@@ -28,6 +28,10 @@ namespace Glouton.SPA.Models.LogViewModel
         static public string Message => "Message";
         static public string FileName => "Filename";
         static public string Detail => "Details";
+        static public string MonitorId => "MonitorId";
+        static public string GroupDepth => "GroupDepth";
+        static public string PreviousEntryType => "PreviousEntryType";
+        static public string PreviousLogTime => "PreviousLogTime";
     } 
 
     public interface ILogViewModel
