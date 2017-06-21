@@ -23,7 +23,7 @@ namespace GloutonLucene
                 System.IO.Directory.CreateDirectory(path);
             return path;
 #else
-            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Glouton", "Indexer");
+            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Glouton", "Logs");
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
             return path;

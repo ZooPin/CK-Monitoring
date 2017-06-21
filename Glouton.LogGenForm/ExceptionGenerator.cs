@@ -30,5 +30,17 @@ namespace Glouton.LogGenForm
             catch (Exception ex) { e = ex; }
             return e;
         }
+
+        public static AggregateException ThrowAggregateException(int numberOfException)
+        {
+            List<Exception> exceptions = new List<Exception>();
+            for(int i = 0; i < numberOfException; i++)
+            {
+                try { throw new Exception(); }
+                catch (Exception ex) { exceptions.Add(ex); }
+            }
+
+            return new AggregateException("Aggregate exceptions list", exceptions);
+        }
     }
 }
