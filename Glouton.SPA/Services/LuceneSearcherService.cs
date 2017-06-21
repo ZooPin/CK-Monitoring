@@ -13,6 +13,7 @@ namespace Glouton.SPA.Services
     {
         static public List<ILogViewModel> Search(string query)
         {
+            if (query == "*") return GetAllLog(25);
             LuceneSearcher searcher;
             List<ILogViewModel> result = new List<ILogViewModel>();
             searcher = new LuceneSearcher(new string[] { Log.LogLevel, Log.Exception });
