@@ -98,7 +98,11 @@ namespace GloutonLucene
             Document document = new Document();
 
             Field message = new TextField("Message", exception.Message, Field.Store.YES);
-            Field stack = new TextField("Stack", exception.StackTrace, Field.Store.YES);
+            if(exception.StackTrace != null)
+            {
+                Field stack = new TextField("Stack", exception.StackTrace, Field.Store.YES);
+                document.Add(stack);
+            }
             Field indexTS = new StringField("IndexTS", CreateIndexTS().ToString(), Field.Store.YES);
 
             if (exception.AggregatedExceptions != null)
@@ -116,9 +120,9 @@ namespace GloutonLucene
                     }
                     Field aggregatedException = new TextField("AggregatedException", exList.ToString(), Field.Store.YES);
                     document.Add(aggregatedException);
+                    _exceptionDepth = 0;
                 }
             }
-            else _exceptionDepth = 0;
 
             if (exception.InnerException != null && exception.AggregatedExceptions == null)
             {
@@ -139,7 +143,6 @@ namespace GloutonLucene
             }
 
             document.Add(message);
-            document.Add(stack);
             document.Add(indexTS);
 
             _numberOfFileToCommit++;
