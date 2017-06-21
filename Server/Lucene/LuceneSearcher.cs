@@ -16,6 +16,7 @@ namespace GloutonLucene
     {
         IndexSearcher _indexSearcher;
         MultiFieldQueryParser _queryParser;
+        QueryParser _exceptionParser;
         Query _query;
 
         public LuceneSearcher(string[] fields)
@@ -24,6 +25,9 @@ namespace GloutonLucene
             _indexSearcher = new IndexSearcher(DirectoryReader.Open(indexDirectory));
             _queryParser =  new MultiFieldQueryParser(LuceneVersion.LUCENE_48,
                 fields,
+                new StandardAnalyzer(LuceneVersion.LUCENE_48));
+            _exceptionParser = new QueryParser(LuceneVersion.LUCENE_48,
+                "Message",
                 new StandardAnalyzer(LuceneVersion.LUCENE_48));
         }
 
@@ -43,9 +47,15 @@ namespace GloutonLucene
             return _indexSearcher.Doc(scoreDoc.Doc);
         }
 
-        public TopDocs GetAll(int numberDocsToReturn)
+        public TopDocs GetAllLog(int numberDocsToReturn)
         {
-            //return _indexSearcher.Search(new query, numberDocsToReturn);
+            return _indexSearcher.Search(new WildcardQuery(new Term("LogLevel", "*")), numberDocsToReturn);
+            return null;
+        }
+
+        public TopDocs GetAllExceptions(int numberDocsToReturn)
+        {
+            return _indexSearcher.Search(_exceptionParser.Parse("Outer"), numberDocsToReturn);
             return null;
         }
     }

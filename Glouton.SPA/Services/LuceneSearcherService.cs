@@ -33,13 +33,13 @@ namespace Glouton.SPA.Services
             }
             return result;
         }
-
-        static public List<ILogViewModel> GetAll(int maxLogtoReturn)
+        
+        static public List<ILogViewModel> GetAllLog(int maxLogtoReturn)
         {
             List<ILogViewModel> result = new List<ILogViewModel>();
             LuceneSearcher searcher;
             searcher = new LuceneSearcher(new string[] { Log.LogLevel });
-            TopDocs hits = searcher.GetAll(maxLogtoReturn);
+            TopDocs hits = searcher.GetAllLog(maxLogtoReturn);
             foreach (ScoreDoc scoreDoc in hits.ScoreDocs)
             {
                 Document doc = searcher.GetDocument(scoreDoc);

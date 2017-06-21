@@ -21,9 +21,9 @@ namespace Glouton.SPA.Controllers
         }
 
         [HttpGet("all/{maxLogToReturn}")]
-        public List<ILogViewModel> SearchAll(int maxLogToReturn)
+        public List<ILogViewModel> GetAllLog(int maxLogToReturn)
         {
-            return LuceneSearcherService.GetAll(maxLogToReturn);
+            return LuceneSearcherService.GetAllLog(maxLogToReturn);
         }
     }
 }
