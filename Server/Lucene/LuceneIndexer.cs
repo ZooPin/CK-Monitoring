@@ -170,7 +170,7 @@ namespace GloutonLucene
         public void CommitIfNeeded()
         {
             if (_numberOfFileToCommit <= 0) return;
-            if ((_lastCommit - DateTime.UtcNow).TotalSeconds >= 1 || _lastCommit == null || _numberOfFileToCommit >= 100)
+            if ((DateTime.UtcNow - _lastCommit).TotalSeconds >= 1 || _lastCommit == null || _numberOfFileToCommit >= 100)
             {
                 _writer.Commit();
                 _lastCommit = DateTime.UtcNow;
