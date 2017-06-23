@@ -13,7 +13,7 @@ namespace Glouton.TCPServer
 {
     public static class BlockReceiver
     {
-        public static async Task<bool> LogBlockReader(byte[] block, LuceneIndexer indexer)
+        public static async Task<bool> LogBlockReader(TCPHelper h, byte[] block, LuceneIndexer indexer)
         {
             if (block.Length == 0) return false;
             ILogBlock logBlock = await BlockReader.Log(block);
@@ -23,7 +23,7 @@ namespace Glouton.TCPServer
             switch (logBlock.Type)
             {
                 case LogType.CKMonitoring:
-                    indexer.IndexLog(LoggerConverter(logBlock.Log));
+                    indexer.IndexLog(LoggerConverter(logBlock.Log), h.OpenInfo.AppId);
                     Console.WriteLine("Server: [Received][Log.CKMonitoring]");
                     break;
                 case LogType.Critical:

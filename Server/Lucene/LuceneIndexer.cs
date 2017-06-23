@@ -32,7 +32,7 @@ namespace GloutonLucene
             _exceptionDepth = 0;
         }
 
-        private Document GetLogDocument(IMulticastLogEntry log)
+        private Document GetLogDocument(IMulticastLogEntry log, int appId)
         {
             Document document = new Document();
 
@@ -86,9 +86,11 @@ namespace GloutonLucene
 
             Field logType = new TextField("LogType", log.LogType.ToString(), Field.Store.YES);
             Field indexTS = new StringField("IndexTS", CreateIndexTS().ToString(), Field.Store.YES);
+            Field AppId = new Int32Field("AppId", appId, Field.Store.YES);
 
             document.Add(logType);
             document.Add(indexTS);
+            document.Add(AppId);
 
             return document;
         }
@@ -159,9 +161,9 @@ namespace GloutonLucene
             return IndexTS;
         }
 
-        public void IndexLog(IMulticastLogEntry log)
+        public void IndexLog(IMulticastLogEntry log, int appId)
         {
-            Document document = GetLogDocument(log);
+            Document document = GetLogDocument(log, appId);
             _writer.AddDocument(document);
             _numberOfFileToCommit++;
             CommitIfNeeded();
