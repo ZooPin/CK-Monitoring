@@ -32,6 +32,7 @@ namespace Glouton.SPA.Models.LogViewModel
         static public string GroupDepth => "GroupDepth";
         static public string PreviousEntryType => "PreviousEntryType";
         static public string PreviousLogTime => "PreviousLogTime";
+        static public string AppId => "AppId";
     } 
 
     public interface ILogViewModel

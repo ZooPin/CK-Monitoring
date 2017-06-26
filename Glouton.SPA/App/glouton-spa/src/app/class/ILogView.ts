@@ -1,4 +1,4 @@
-export enum LogType {
+﻿export enum LogType {
     Opengroup,
     Line,
     CloseGroup
@@ -25,4 +25,7 @@ export interface ILogView {
     groupDepth: string;
     previousEntryType: string;
     previousLogTime: string;
+    appId: string;
+    sourceFileName: string;
+    lineNumber: string;
 }

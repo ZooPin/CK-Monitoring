@@ -125,7 +125,7 @@
 }
 
 .timeline-badge.danger {
-    background-color: #d9534f !important;
+    background-color: #2d2e30 !important;
 }
 
 .timeline-badge.info {
@@ -133,11 +133,11 @@
 }
 
 .timeline-badge.trace {
-    background-color: #9F0AD5 !important;
+    background-color: #626263 !important;
 }
 
 .timeline-badge.error {
-    background-color: #E17000 !important;
+    background-color: #d9534f !important;
 }
 
 .timeline-title {
