@@ -21,16 +21,25 @@
           <div class="timeline-body">
             <strong><p>{{log.text}}</p></strong>
             <p>{{log.sourceFileName}} (Line : {{log.lineNumber}})</p>
-            <div *ngIf="log.exception" class="alert alert-danger" role="alert">
-              <p><strong>Exception</strong></p>
-              <p><strong>{{log.exception.message}}</strong><br><pre>{{log.exception.stack}}</pre></p>
-              <div *ngIf="log.exception.innerException" class="alert alert-danger">
-                <p><strong>Inner</strong></p>
+            <ngb-accordion *ngIf="log.exception" #acc="ngbAccordion">
+              <ngb-panel id="toggle-1" title="Exception">
+                <ng-template ngbPanelContent>
+                  <div class="alert alert-danger" role="alert">
+                  <p><strong>{{log.exception.message}}</strong><br><pre>{{log.exception.stack}}</pre></p>
+                  </div>
+                </ng-template>
+              </ngb-panel>
+              <ngb-panel *ngIf="log.exception.innerException" id="toggle-2" title="Inner Exception">
+                <ng-template ngbPanelContent>
+                  <div class="alert alert-danger">
+                    <p><strong>Inner</strong></p>
                 <pre>{{log.exception.innerException.stack}}</pre>
-                <p>{{log.exception.innerException.fileName}}</p>
+                    <p>{{log.exception.innerException.fileName}}</p>
                 <pre>{{log.exception.innerException.details}}</pre>
-              </div>
-            </div>
+                  </div>
+                </ng-template>
+              </ngb-panel>
+            </ngb-accordion>
           </div>
         </div>
       </li>

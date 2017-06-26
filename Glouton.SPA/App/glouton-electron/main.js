@@ -31,7 +31,7 @@ function createWindow() {
 
   // and load the index.html of the app.
   mainWindow.loadURL(url.format({
-    pathname: 'localhost:5000/',
+    pathname: 'localhost:5000/index.html',
     protocol: 'http:',
     slashes: true
   }))
