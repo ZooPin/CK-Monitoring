@@ -44,7 +44,7 @@ namespace Glouton.TCPServer
             {
                 await BlockReceiver.OpenBlockReader(this, await ReadBlock(networkStream));
                 while 
-                    (await BlockReceiver.LogBlockReader(await ReadBlock(networkStream), indexer));
+                    (await BlockReceiver.LogBlockReader(this, await ReadBlock(networkStream), indexer));
                 indexer.ForceCommit();
             }
             Console.WriteLine("Server: [client][disconnect]");
