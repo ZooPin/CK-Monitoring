@@ -38,7 +38,7 @@ namespace Glouton.SPA.Models.LogViewModel
                 Tags = doc.Get(Log.Tags),
                 SourceFileName = doc.Get(Log.SourceFileName),
                 LineNumber = doc.Get(Log.LineNumber),
-                LogTime = doc.Get(Log.LogTime),
+                LogTime = DateTools.StringToDate(doc.Get(Log.LogTime)).ToString("dd/MM/yyyy HH:mm:ss.fff"),
                 Exception = ExceptionViewModel.ExceptionViewModel.Get(searcher, doc),
                 AppId = doc.Get(Log.AppId)
             };

@@ -51,7 +51,7 @@ namespace GloutonLucene
                 Field logLevel = new TextField("LogLevel", log.LogLevel.ToString(), Field.Store.YES);
                 Field text = new TextField("Text", log.Text, Field.Store.YES);
                 Field tags = new StringField("Tags", log.Tags.ToString(), Field.Store.YES);
-                Field logTime = new StringField("LogTime", log.LogTime.TimeUtc.ToString(), Field.Store.YES);
+                Field logTime = new StringField("LogTime", DateTools.DateToString(log.LogTime.TimeUtc, DateTools.Resolution.MILLISECOND), Field.Store.YES);
                 Field fileName = new TextField("FileName", log.FileName, Field.Store.YES);
                 Field lineNumber = new TextField("LineNumber", log.LineNumber.ToString(), Field.Store.YES);
                 if (log.Exception != null)
@@ -77,7 +77,7 @@ namespace GloutonLucene
                 }
                 Field logLevel = new TextField("LogLevel", log.LogLevel.ToString(), Field.Store.YES);
                 Field conclusions = new TextField("Conclusions", builder.ToString(), Field.Store.YES);
-                Field logTime = new TextField("LogTime", log.LogTime.TimeUtc.ToString(), Field.Store.YES);
+                Field logTime = new TextField("LogTime", DateTools.DateToString(log.LogTime.TimeUtc, DateTools.Resolution.MILLISECOND), Field.Store.YES);
 
                 document.Add(logLevel);
                 document.Add(logTime);
