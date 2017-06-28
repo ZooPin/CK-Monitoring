@@ -1,10 +1,10 @@
 <li class="timeline timeline-inverted">
-  <div *ngIf="log.logLevel.indexOf('Fatal') >= 0" class="timeline-badge danger"><i class="glyphicon glyphicon-check"></i></div>
-  <div *ngIf="log.logLevel.indexOf('Warn') >= 0" class="timeline-badge warning"><i class="glyphicon glyphicon-check"></i></div>
-  <div *ngIf="log.logLevel.indexOf('Info') >= 0" class="timeline-badge info"><i class="glyphicon glyphicon-check"></i></div>
-  <div *ngIf="log.logLevel.indexOf('Trace') >= 0" class="timeline-badge trace"><i class="glyphicon glyphicon-check"></i></div>
-  <div *ngIf="log.logLevel.indexOf('Error') >= 0" class="timeline-badge error"><i class="glyphicon glyphicon-check"></i></div>
-  <div *ngIf="log.logLevel.indexOf('Debug') >= 0" class="timeline-badge debug"><i class="glyphicon glyphicon-check"></i></div>
+  <div *ngIf="log.logLevel.indexOf('Fatal') >= 0" class="timeline-badge danger"><i class="glyphicon glyphicon-list"></i></div>
+  <div *ngIf="log.logLevel.indexOf('Warn') >= 0" class="timeline-badge warning"><i class="glyphicon glyphicon-list"></i></div>
+  <div *ngIf="log.logLevel.indexOf('Info') >= 0" class="timeline-badge info"><i class="glyphicon glyphicon-list"></i></div>
+  <div *ngIf="log.logLevel.indexOf('Trace') >= 0" class="timeline-badge trace"><i class="glyphicon glyphicon-list"></i></div>
+  <div *ngIf="log.logLevel.indexOf('Error') >= 0" class="timeline-badge error"><i class="glyphicon glyphicon-list"></i></div>
+  <div *ngIf="log.logLevel.indexOf('Debug') >= 0" class="timeline-badge debug"><i class="glyphicon glyphicon-list"></i></div>
   <div class="timeline-panel">
     <div class="timeline-heading">
       <h4 class="timeline-title"> {{log.logLevel}}</h4>
