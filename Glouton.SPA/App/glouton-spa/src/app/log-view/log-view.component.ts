@@ -9,6 +9,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 })
 export class LogViewComponent implements OnInit {
 
+  public ExceptionCollapsed : boolean = true;
+  public InnerExceptionCollapsed : boolean = true;
+
   constructor() { }
 
   ngOnInit() {

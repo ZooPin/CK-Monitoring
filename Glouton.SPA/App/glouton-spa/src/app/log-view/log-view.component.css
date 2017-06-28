@@ -158,3 +158,8 @@ li.timeline-inverted > .timeline-panel:after {
         right: auto;
     }
 }
+
+button.btn.btn-danger {
+    margin-bottom: 7px;
+    margin-top : 5px
+}
