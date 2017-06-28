@@ -1,0 +1,37 @@
+<li class="timeline timeline-inverted">
+  <div *ngIf="log.logLevel.indexOf('Fatal') >= 0" class="timeline-badge danger"><i class="glyphicon glyphicon-list"></i></div>
+  <div *ngIf="log.logLevel.indexOf('Warn') >= 0" class="timeline-badge warning"><i class="glyphicon glyphicon-list"></i></div>
+  <div *ngIf="log.logLevel.indexOf('Info') >= 0" class="timeline-badge info"><i class="glyphicon glyphicon-list"></i></div>
+  <div *ngIf="log.logLevel.indexOf('Trace') >= 0" class="timeline-badge trace"><i class="glyphicon glyphicon-list"></i></div>
+  <div *ngIf="log.logLevel.indexOf('Error') >= 0" class="timeline-badge error"><i class="glyphicon glyphicon-list"></i></div>
+  <div *ngIf="log.logLevel.indexOf('Debug') >= 0" class="timeline-badge debug"><i class="glyphicon glyphicon-list"></i></div>
+  <div class="timeline-panel">
+    <div class="timeline-heading">
+      <h4 class="timeline-title"> {{log.logLevel}}</h4>
+      <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i> {{log.logTime}}</small></p>
+    </div>
+    <div class="timeline-body">
+      <strong><p>{{log.text}}</p></strong>
+      <p>{{log.sourceFileName}} (Line : {{log.lineNumber}})</p>
+
+      <button *ngIf="log.exception" type="button" class="btn btn-danger" (click)="ExceptionCollapsed = !ExceptionCollapsed"
+        [attr.aria-expanded]="!ExceptionCollapsed" aria-controls="exception">Exception</button>
+      <div *ngIf="log.exception" id="exception" [ngbCollapse]="ExceptionCollapsed">
+        <div class="alert alert-danger" role="alert">
+          <p><strong>{{log.exception.message}}</strong></p>
+          <pre>{{log.exception.stack}}</pre>
+          <button *ngIf="log.exception" type="button" class="btn btn-danger" (click)="InnerExceptionCollapsed = !InnerExceptionCollapsed"
+            [attr.aria-expanded]="!InnerExceptionCollapsed" aria-controls="Inner Exception">Exception</button>
+          <div *ngIf="log.exception.innerException" id="innerException" [ngbCollapse]="InnerExceptionCollapsed">
+            <div class="alert alert-danger">
+              <p><strong>Inner</strong></p>
+              <pre>{{log.exception.innerException.stack}}</pre>
+              <p>{{log.exception.innerException.fileName}}</p>
+              <pre *ngIf="log.exception.innerException.details">{{log.exception.innerException.details}}</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</li>
