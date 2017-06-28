@@ -17,6 +17,7 @@ namespace GloutonLucene
         IndexSearcher _indexSearcher;
         MultiFieldQueryParser _queryParser;
         QueryParser _exceptionParser;
+        QueryParser _levelParser;
         Query _query;
 
         public LuceneSearcher(string[] fields)
@@ -29,6 +30,48 @@ namespace GloutonLucene
             _exceptionParser = new QueryParser(LuceneVersion.LUCENE_48,
                 "Message",
                 new StandardAnalyzer(LuceneVersion.LUCENE_48));
+            _levelParser = new QueryParser(LuceneVersion.LUCENE_48,
+                "LogLevel",
+                new StandardAnalyzer(LuceneVersion.LUCENE_48));
+        }
+
+        private Query CreateQuery(string monitorID, string AppId, string[] fields, string[] logLevel, DateTime startingDate, DateTime endingDate, string searchQuery)
+        {
+            BooleanQuery bQuery = new BooleanQuery();
+            if (monitorID != "All") bQuery.Add(new TermQuery(new Term("MonitorId", monitorID)), Occur.MUST);
+            if (AppId != "All") bQuery.Add(new TermQuery(new Term("AppId", AppId)), Occur.MUST);
+            BooleanQuery bFieldQuery = new BooleanQuery();
+            foreach (string field in fields)
+            {
+                if(field == "Text")
+                    bFieldQuery.Add(new QueryParser(LuceneVersion.LUCENE_48, field, new StandardAnalyzer(LuceneVersion.LUCENE_48)).Parse(searchQuery), Occur.SHOULD);
+                else
+                    bFieldQuery.Add(new TermQuery(new Term(field, searchQuery)), Occur.SHOULD);
+            }
+            bQuery.Add(bFieldQuery, Occur.MUST);
+            BooleanQuery bLevelQuery = new BooleanQuery();
+            foreach (string level in logLevel)
+            {
+                bLevelQuery.Add(_levelParser.Parse(level), Occur.SHOULD);
+            }
+            bQuery.Add(bLevelQuery, Occur.MUST);
+            bQuery.Add(new TermRangeQuery("LogTime",
+                new BytesRef(DateTools.DateToString(startingDate, DateTools.Resolution.MILLISECOND)),
+                new BytesRef(DateTools.DateToString(endingDate, DateTools.Resolution.MILLISECOND)),
+                includeLower: true,
+                includeUpper: true), Occur.MUST);
+            return bQuery;
+        }
+
+        public TopDocs GetQueryResult()
+        {
+            return _indexSearcher.Search(CreateQuery("All",
+                "All",
+                new string[] { "Text" },
+                new string[] { "Trace", "Info", "Warn", "Debug" },
+                new DateTime(2017, 6, 20, 00, 00, 0).ToUniversalTime(),
+                DateTime.UtcNow,
+                "aa"),20);
         }
 
         public TopDocs Search (string searchQuery)
