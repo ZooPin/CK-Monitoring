@@ -13,6 +13,7 @@
         <div *ngIf="log.logLevel.indexOf('Info') >= 0" class="timeline-badge info"><i class="glyphicon glyphicon-check"></i></div>
         <div *ngIf="log.logLevel.indexOf('Trace') >= 0" class="timeline-badge trace"><i class="glyphicon glyphicon-check"></i></div>
         <div *ngIf="log.logLevel.indexOf('Error') >= 0" class="timeline-badge error"><i class="glyphicon glyphicon-check"></i></div>
+        <div *ngIf="log.logLevel.indexOf('Debug') >= 0" class="timeline-badge debug"><i class="glyphicon glyphicon-check"></i></div>
         <div class="timeline-panel">
           <div class="timeline-heading">
             <h4 class="timeline-title"> {{log.logLevel}}</h4>
@@ -25,7 +26,7 @@
               <ngb-panel id="toggle-1" title="Exception">
                 <ng-template ngbPanelContent>
                   <div class="alert alert-danger" role="alert">
-                  <p><strong>{{log.exception.message}}</strong><br><pre>{{log.exception.stack}}</pre></p>
+                    <p><strong>{{log.exception.message}}</strong><br><pre>{{log.exception.stack}}</pre></p>
                   </div>
                 </ng-template>
               </ngb-panel>
@@ -33,9 +34,9 @@
                 <ng-template ngbPanelContent>
                   <div class="alert alert-danger">
                     <p><strong>Inner</strong></p>
-                <pre>{{log.exception.innerException.stack}}</pre>
+                    <pre>{{log.exception.innerException.stack}}</pre>
                     <p>{{log.exception.innerException.fileName}}</p>
-                <pre>{{log.exception.innerException.details}}</pre>
+                    <pre>{{log.exception.innerException.details}}</pre>
                   </div>
                 </ng-template>
               </ngb-panel>

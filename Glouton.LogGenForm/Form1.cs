@@ -26,6 +26,7 @@ namespace Glouton.LogGenerator
             if (Monitor != null) return;
             Monitor = new ActivityMonitor(false);
             g.EnsureGrandOutputClient(Monitor);
+            Monitor.MinimalFilter = LogFilter.Debug;
         }
 
         private void buttonOpenGroup_Click(object sender, EventArgs e)
