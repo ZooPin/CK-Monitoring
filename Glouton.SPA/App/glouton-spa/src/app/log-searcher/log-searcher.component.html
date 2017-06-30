@@ -1,10 +1,14 @@
 <div class="container">
   <div class="page-header">
+    <filter-checkbox></filter-checkbox>
     <div class="input-group">
       <span class="input-group-addon" id="basic-addon1">Search</span>
-      <input #query (keyup.enter)="Search(query.value); query.value=''" type="text" class="form-control" placeholder="trace" aria-describedby="basic-addon1">
+      <input #query (keyup.enter)="Search(query.value); query.value=''" type="text" class="form-control" placeholder="keyword" aria-describedby="basic-addon1">
     </div>
   </div>
+
+  <ngbd-datepicker-popup></ngbd-datepicker-popup>
+
   <ul *ngIf="data" class="timeline">
     <div *ngFor="let log of data; index as i">
       <app-log-view [log]="data[i]"></app-log-view>

@@ -1,0 +1,24 @@
+<form [formGroup]="checkboxGroupForm">
+  <div class="btn-group" data-toggle="buttons">
+    <label class="btn btn-default" [class.active]="checkboxGroupForm.value.trace">
+      <input type="checkbox" formControlName="trace"> Trace
+    </label>
+    <label class="btn btn-default" [class.active]="checkboxGroupForm.value.info">
+      <input type="checkbox" formControlName="info"> Info
+    </label>
+    <label class="btn btn-default" [class.active]="checkboxGroupForm.value.warn">
+      <input type="checkbox" formControlName="warn"> Warn
+    </label>
+    <label class="btn btn-default" [class.active]="checkboxGroupForm.value.error">
+      <input type="checkbox" formControlName="error"> Error
+    </label>
+    <label class="btn btn-default" [class.active]="checkboxGroupForm.value.fatal">
+      <input type="checkbox" formControlName="fatal"> Fatal
+    </label>
+    <label class="btn btn-default" [class.active]="checkboxGroupForm.value.debug">
+      <input type="checkbox" formControlName="debug"> Debug
+    </label>
+  </div>
+</form>
+<hr>
+<pre>{{checkboxGroupForm.value | json}}</pre>
