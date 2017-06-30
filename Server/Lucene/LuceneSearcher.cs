@@ -35,7 +35,7 @@ namespace GloutonLucene
                 new StandardAnalyzer(LuceneVersion.LUCENE_48));
         }
 
-        private Query CreateQuery(string monitorID, string AppId, string[] fields, string[] logLevel, DateTime startingDate, DateTime endingDate, string searchQuery)
+        public Query CreateQuery(string monitorID, string AppId, string[] fields, string[] logLevel, DateTime startingDate, DateTime endingDate, string searchQuery)
         {
             BooleanQuery bQuery = new BooleanQuery();
             if (monitorID != "All") bQuery.Add(new TermQuery(new Term("MonitorId", monitorID)), Occur.MUST);
@@ -43,10 +43,10 @@ namespace GloutonLucene
             BooleanQuery bFieldQuery = new BooleanQuery();
             foreach (string field in fields)
             {
-                if(field == "Text")
+                if(field == "Text" && searchQuery != "*")
                     bFieldQuery.Add(new QueryParser(LuceneVersion.LUCENE_48, field, new StandardAnalyzer(LuceneVersion.LUCENE_48)).Parse(searchQuery), Occur.SHOULD);
                 else
-                    bFieldQuery.Add(new TermQuery(new Term(field, searchQuery)), Occur.SHOULD);
+                    bFieldQuery.Add(new WildcardQuery(new Term(field, searchQuery)), Occur.SHOULD);
             }
             bQuery.Add(bFieldQuery, Occur.MUST);
             BooleanQuery bLevelQuery = new BooleanQuery();
