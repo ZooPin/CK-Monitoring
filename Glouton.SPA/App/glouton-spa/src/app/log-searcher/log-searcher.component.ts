@@ -1,6 +1,7 @@
 import { Component, OnInit , NgModule } from '@angular/core';
 import { LogSearcherService } from '../log-searcher.service';
 import { LogType, ILogView } from '../class/ILogView';
+import { SearcherService } from '../searcher.service';
 import { NgbModule, NgbDateStruct, NgbDatepicker } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -13,14 +14,15 @@ export class LogSearcherComponent implements OnInit {
   data : Array<ILogView>;
   model;
 
-  constructor(private LogSearcherService: LogSearcherService) { }
+  constructor(private LogSearcherService: LogSearcherService, private searcher: SearcherService) { }
 
   ngOnInit() {
     this.GetAllLog(20);
   }
 
   async Search(query:string) {
-    await this.LogSearcherService.Search(query).subscribe(data => this.data = data as Array<ILogView>);
+    this.searcher.Query = query;
+    await this.searcher.Send().subscribe(data => this.data = data as Array<ILogView>);
   }
 
   async GetAllLog(maxLogToReturn:number) {

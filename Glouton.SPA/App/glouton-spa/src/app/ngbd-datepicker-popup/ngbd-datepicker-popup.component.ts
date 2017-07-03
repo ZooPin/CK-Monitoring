@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
-import { IHours } from '../class/IDate';
+import { IHour, IDate } from '../class/IDate';
+import { SearcherService } from '../searcher.service';
+
 
 @Component({
   selector: 'ngbd-datepicker-popup',
@@ -8,16 +10,22 @@ import { IHours } from '../class/IDate';
   styleUrls: ['./ngbd-datepicker-popup.component.css']
 })
 export class NgbdDatepickerPopupComponent implements OnInit {
-
   dateStart: NgbDateStruct;
   dateEnd: NgbDateStruct;
-  timeStart: IHours;
-  timeEnd: IHours;
-  step : IHours = {hour:1, minute: 15, second: 30}
+  timeStart: IHour;
+  timeEnd: IHour;
+  step : IHour = {hour:1, minute: 15, second: 30}
 
-  constructor() { }
+  constructor(private searcher: SearcherService) { }
 
   ngOnInit() {
+  }
+
+  updateService(): void {
+    this.searcher.DateStart = this.dateStart as IDate;
+    this.searcher.DateEnd = this.dateEnd as IDate;
+    this.searcher.HourStart = this.timeStart;
+    this.searcher.HourEnd = this.timeEnd;
   }
 
 }

@@ -21,7 +21,7 @@ export class SearcherService {
   constructor(private _http: Http) { }
 
   Send () {
-    this._http.get(this.ConstructQuery()).map(res => res.json());
+    return this._http.get(this.ConstructQuery()).map(res => res.json());
   }
 
   private ConstructQuery() : string {
@@ -30,13 +30,13 @@ export class SearcherService {
     let query:string = "/api/search/";
     query += this.ConstructDate(this._dateStart, this._hourStart);
     query += "/" + this.ConstructDate(this._dateEnd, this._hourEnd);
-    query += "/" + (this._monitorId) ? this._monitorId : "*";
-    query += "/" + (this._appId) ? this._appId : "*";
+    query += "/" + ((this.MonitorId) ? this._monitorId : "*");
+    query += "/" + ((this.AppId) ? this._appId : "*");
     query += "/*";
-    query += "/" + (this._query) ? this._query : "*";
-    query += "?"
+    query += "/" + ((this._query) ? this._query : "*");
+    query += "/?"
     this.ConstructFilter(this._filter).forEach((item, index) => {
-       query += (index == 0) ? "" : "&";
+       query += ((index == 0) ? "" : "&");
        query += "logLevel=" + item;
     });
     return query;
@@ -48,9 +48,9 @@ export class SearcherService {
     dateSend += date.year + "-";
     dateSend += date.month + "-";
     dateSend += date.day + "T";
-    dateSend += hour.hour + ":";
-    dateSend += hour.minute + ":";
-    dateSend += hour.second + ".000Z";
+    dateSend += ((hour.hour) ? hour.hour : "00") + ":";
+    dateSend += ((hour.minute) ? hour.minute : "00") + ":";
+    dateSend += ((hour.second) ? hour.second : "00") + ".000Z";
     return dateSend;
   }
 

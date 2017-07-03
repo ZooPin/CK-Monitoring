@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
+import { SearcherService } from '../searcher.service';
+import { IFilter } from '../class/IFilter';
 
 @Component({
   selector: 'filter-checkbox',
@@ -7,10 +9,14 @@ import {FormBuilder, FormGroup} from '@angular/forms';
   styleUrls: ['./filter-checkbox.component.css']
 })
 export class FilterCheckboxComponent implements OnInit {
-
+  
   public checkboxGroupForm: FormGroup;
 
-  constructor(private formBuilder: FormBuilder) {}
+  constructor(private formBuilder: FormBuilder, private searcher: SearcherService) {}
+
+  updateService(): void {
+    this.searcher.Filter = this.checkboxGroupForm.value as IFilter;
+  }
 
   ngOnInit() {
     this.checkboxGroupForm = this.formBuilder.group({
@@ -21,5 +27,6 @@ export class FilterCheckboxComponent implements OnInit {
       fatal: false,
       debug: false
     });
+    this.updateService();
   }
 }

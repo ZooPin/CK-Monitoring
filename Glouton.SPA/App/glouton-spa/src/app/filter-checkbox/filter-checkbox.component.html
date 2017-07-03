@@ -1,5 +1,5 @@
 <form [formGroup]="checkboxGroupForm">
-  <div class="btn-group" data-toggle="buttons">
+  <div (click)="updateService()" class="btn-group" data-toggle="buttons">
     <label class="btn btn-default" [class.active]="checkboxGroupForm.value.trace">
       <input type="checkbox" formControlName="trace"> Trace
     </label>

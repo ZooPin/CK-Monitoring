@@ -1,12 +1,12 @@
-<div class="row">
+<div  class="row">
   <div class="col-md-3"></div>
   <div class="col-md-3">
-    <ngb-datepicker #dpStart [(ngModel)]="dateStart" (navigate)="date = $event.next"></ngb-datepicker>
-    <ngb-timepicker [(ngModel)]="timeStart" [minuteStep]="step.minute" [secondStep]="step.second"></ngb-timepicker>
+    <ngb-datepicker (click)="updateService()" #dpStart [(ngModel)]="dateStart" (navigate)="date = $event.next"></ngb-datepicker>
+    <ngb-timepicker (click)="updateService()" [(ngModel)]="timeStart" [minuteStep]="step.minute" [secondStep]="step.second"></ngb-timepicker>
   </div>
   <div class="col-md-3">
-    <ngb-datepicker #dpEnd [(ngModel)]="dateEnd" (navigate)="date = $event.next"></ngb-datepicker>
-    <ngb-timepicker [(ngModel)]="timeEnd" [minuteStep]="step.minute" [secondStep]="step.second"></ngb-timepicker>
+    <ngb-datepicker (click)="updateService()" #dpEnd [(ngModel)]="dateEnd" (navigate)="date = $event.next"></ngb-datepicker>
+    <ngb-timepicker (click)="updateService()" [(ngModel)]="timeEnd" [minuteStep]="step.minute" [secondStep]="step.second"></ngb-timepicker>
   </div>
   <div class="col-md-3"></div>
 </div>

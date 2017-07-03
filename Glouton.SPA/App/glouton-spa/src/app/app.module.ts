@@ -8,6 +8,7 @@ import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { LogSearcherComponent } from './log-searcher/log-searcher.component';
 import { LogSearcherService } from './log-searcher.service';
+import { SearcherService } from './searcher.service';
 import { LogViewComponent } from './log-view/log-view.component';
 import { NgbdDatepickerPopupComponent } from './ngbd-datepicker-popup/ngbd-datepicker-popup.component';
 import { FilterCheckboxComponent } from './filter-checkbox/filter-checkbox.component';
@@ -27,7 +28,7 @@ import { FilterCheckboxComponent } from './filter-checkbox/filter-checkbox.compo
     FormsModule,
     ReactiveFormsModule
   ],
-  providers: [LogSearcherService],
+  providers: [LogSearcherService, SearcherService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
