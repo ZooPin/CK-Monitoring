@@ -15,12 +15,12 @@ export class FilterCheckboxComponent implements OnInit {
   constructor(private formBuilder: FormBuilder, private searcher: SearcherService) {}
 
   updateService(): void {
-    this.searcher.Filter = this.checkboxGroupForm.value as IFilter;
+    setTimeout(() => this.searcher.Filter = this.checkboxGroupForm.value as IFilter, 1);
   }
 
   ngOnInit() {
     this.checkboxGroupForm = this.formBuilder.group({
-      trace: true,
+      trace: false,
       info: false,
       warn: false,
       error: false,

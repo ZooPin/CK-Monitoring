@@ -18,7 +18,10 @@ export class SearcherService {
   private _appId: string;
   private _monitorId: string;
 
-  constructor(private _http: Http) { }
+  constructor(private _http: Http) {
+    this._hourEnd = {hour:0, minute: 0, second: 0};
+    this._hourStart = {hour:0, minute: 0, second: 0};
+  }
 
   Send () {
     return this._http.get(this.ConstructQuery()).map(res => res.json());
@@ -26,6 +29,9 @@ export class SearcherService {
 
   private ConstructQuery() : string {
     if(!this.IsSendable) throw new TypeError("Object not sendable");
+    if(typeof(this.HourEnd) === 'undefined' ) this.HourEnd = {hour:0, minute: 0, second: 0};
+    if(typeof(this.HourStart) === 'undefined') this.HourStart = {hour:0, minute: 0, second: 0};
+
     //model: {dateStart}/{dateEnd}/{monitorId}/{appId}/{fields}/{keyword}?[logLevel=...]
     let query:string = "/api/search/";
     query += this.ConstructDate(this._dateStart, this._hourStart);
@@ -67,9 +73,7 @@ export class SearcherService {
 
   get IsSendable() {
     return this._dateStart &&
-           this._dateEnd &&
-           this._hourStart &&
-           this._hourEnd;
+           this._dateEnd;
   }
 
   get DateStart() {
