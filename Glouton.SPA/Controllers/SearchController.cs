@@ -25,5 +25,17 @@ namespace Glouton.SPA.Controllers
         {
             return LuceneSearcherService.GetAllLog(maxLogToReturn);
         }
+
+        [HttpGet("{dateStart}/{dateEnd}/{monitorId}/{appId}/{fields}/{logLevel}/{keyword}")]
+        [HttpGet("{dateStart}/{dateEnd}/")]
+        public List<ILogViewModel> SearchByDate(string monitorId, string appId, DateTime dateStart, DateTime dateEnd, string[] fields, string[] logLevel, string keyword)
+        {
+            if (monitorId == null || monitorId == "*") monitorId = "All";
+            if (appId == null || appId == "*") appId = "All";
+            if (fields.Length == 0 || fields[0] == "*") fields = new string[] { "Tags", "FileName", "Text" };
+            if (logLevel.Length == 0 || logLevel[0] == "*") logLevel = new string[] { "Debug", "Trace", "Info", "Warn", "Error", "Fatal" };
+            if (keyword == null) keyword = "*";
+            return LuceneSearcherService.GetLogWithFilters(monitorId, appId, dateStart, dateEnd, fields, logLevel, keyword);
+        }
     }
 }
