@@ -1,4 +1,4 @@
-export interface IHours {
+export interface IHour {
     hour:number;
     minute:number;
     second: number;
