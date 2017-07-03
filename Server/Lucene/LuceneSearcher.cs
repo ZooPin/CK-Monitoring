@@ -63,17 +63,6 @@ namespace GloutonLucene
             return bQuery;
         }
 
-        public TopDocs GetQueryResult()
-        {
-            return _indexSearcher.Search(CreateQuery("All",
-                "All",
-                new string[] { "Text" },
-                new string[] { "Trace", "Info", "Warn", "Debug" },
-                new DateTime(2017, 6, 20, 00, 00, 0).ToUniversalTime(),
-                DateTime.UtcNow,
-                "aa"),20);
-        }
-
         public TopDocs Search (string searchQuery)
         {
             _query = _queryParser.Parse(searchQuery);

@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\CK.Monitoring\CK.Monitoring.csproj" />
+    <ProjectReference Include="..\..\CK.TcpHandler\CK.TcpHandler.csproj" />
   </ItemGroup>
 
 </Project>

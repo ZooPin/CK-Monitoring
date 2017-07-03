@@ -4,12 +4,14 @@ using System.Text;
 using System.IO;
 using Lucene.Net.Index;
 using Lucene.Net.Store;
+using Lucene.Net.Search;
 using Lucene.Net.Documents;
 using Lucene.Net.Analysis;
 using Lucene.Net.Util;
 using Lucene.Net.Analysis.Standard;
 using CK.Monitoring;
 using CK.Core;
+using CK.TcpHandler.Configuration.Protocol;
 
 namespace GloutonLucene
 {
@@ -20,6 +22,9 @@ namespace GloutonLucene
         private DateTime _lastCommit;
         private int _numberOfFileToCommit;
         private int _exceptionDepth;
+        private LuceneSearcher _searcher;
+        private ISet<string> _monitorIdList;
+        private ISet<string> _appIdList;
 
         public LuceneIndexer (string indexDirectoryPath)
         {
@@ -30,17 +35,31 @@ namespace GloutonLucene
             _lastDateTimeStamp = new DateTimeStamp(DateTime.UtcNow, 0);
             _numberOfFileToCommit = 0;
             _exceptionDepth = 0;
+            InitializeSearcher();
+            InitializeIdList();
+        }
+
+        public void InitializeSearcher()
+        {
+            try
+            {
+                _searcher = new LuceneSearcher(new string[] { "MonitorIdList", "AppIdList" });
+            }
+            catch (Exception e)
+            {
+
+            }
         }
 
         private Document GetLogDocument(IMulticastLogEntry log, int appId)
         {
             Document document = new Document();
-
+            
             Field monitorId = new StringField("MonitorId", log.MonitorId.ToString(), Field.Store.YES);
             Field groupDepth = new StringField("GroupDepth", log.GroupDepth.ToString(), Field.Store.YES);
             Field previousEntryType = new StringField("PreviousEntryType", log.PreviousEntryType.ToString(), Field.Store.YES);
             Field previousLogTime = new StringField("PreviousLogTime", log.PreviousLogTime.ToString(), Field.Store.YES);
-
+            
             document.Add(monitorId);
             document.Add(groupDepth);
             document.Add(previousEntryType);
@@ -154,6 +173,23 @@ namespace GloutonLucene
             return document;
         }
 
+        private Document GetOpenBlockDocument(IOpen openBlock)
+        {
+            Document document = new Document();
+
+            Field openBlockAppId = new StringField("OpenAppId", openBlock.AppId.ToString(), Field.Store.YES);
+            Field openStreamVersion = new StringField("OpenStreamVersion", openBlock.StreamVersion.ToString(), Field.Store.YES);
+            Field openBlockBaseDir = new StringField("OpenBaseDirectory", openBlock.BaseDirectory, Field.Store.YES);
+            Field openBlockInfos = new StringField("OpenInfos", openBlock.Info.ToString(), Field.Store.YES);
+
+            document.Add(openBlockAppId);
+            document.Add(openBlockBaseDir);
+            document.Add(openBlockInfos);
+            document.Add(openStreamVersion);
+
+            return document;
+        }
+
         private DateTimeStamp CreateIndexTS()
         {
             DateTimeStamp IndexTS = new DateTimeStamp(_lastDateTimeStamp, DateTime.UtcNow);
@@ -161,12 +197,97 @@ namespace GloutonLucene
             return IndexTS;
         }
 
+        private void CheckIds(IMulticastLogEntry log, int appId)
+        {
+            if (!_monitorIdList.Contains(log.MonitorId.ToString())) _monitorIdList.Add(log.MonitorId.ToString());
+            if (!_appIdList.Contains(appId.ToString())) _appIdList.Add(appId.ToString());
+        }
+
+        private void InitializeIdList()
+        {
+            _monitorIdList = new HashSet<string>();
+            _appIdList = new HashSet<string>();
+            if (_searcher == null) return;
+            TopDocs hits = _searcher.Search(new WildcardQuery(new Term("MonitorIdList", "*")));
+            foreach (ScoreDoc doc in hits.ScoreDocs)
+            {
+                Document document = _searcher.GetDocument(doc);
+                string[] monitorIds = document.Get("MonitorIdList").Split(' ');
+                foreach (string id in monitorIds)
+                {
+                    if (!_monitorIdList.Contains(id)) _monitorIdList.Add(id);
+                }
+                string[] appIds = document.Get("AppIdList").Split(' ');
+                foreach (string id in appIds)
+                {
+                    if (!_appIdList.Contains(id)) _appIdList.Add(id);
+                }
+            }
+            if (hits.TotalHits == 0) CreateIdListDoc();
+        }
+
         public void IndexLog(IMulticastLogEntry log, int appId)
         {
+            CheckIds(log, appId);
             Document document = GetLogDocument(log, appId);
             _writer.AddDocument(document);
             _numberOfFileToCommit++;
             CommitIfNeeded();
+        }
+
+        public void IndexOpenBlock(IOpen openBlock)
+        {
+            Document document = GetOpenBlockDocument(openBlock);
+            _writer.AddDocument(document);
+            _numberOfFileToCommit++;
+            CommitIfNeeded();
+        }
+
+        private string GetMonitorIdList ()
+        {
+            StringBuilder builder = new StringBuilder();
+            foreach(string id in _monitorIdList)
+            {
+                builder.Append(id);
+                builder.Append(" ");
+            }
+            return builder.ToString();
+        }
+
+        private string GetAppIdList()
+        {
+            StringBuilder builder = new StringBuilder();
+            foreach (string id in _appIdList)
+            {
+                builder.Append(id);
+                builder.Append(" ");
+            }
+            return builder.ToString();
+        }
+        public void CreateIdListDoc()
+        {
+            Document doc = new Document();
+
+            Field monitorIdList = new TextField("MonitorIdList", GetMonitorIdList(), Field.Store.YES);
+            Field appIdList = new TextField("AppIdList", GetAppIdList(), Field.Store.YES);
+
+            doc.Add(monitorIdList);
+            doc.Add(appIdList);
+
+            _writer.AddDocument(doc);
+        }
+
+        public void UpdateIdListDoc()
+        {
+            Document doc = new Document();
+
+            Field monitorIdList = new TextField("MonitorIdList", GetMonitorIdList(), Field.Store.YES);
+            Field appIdList = new TextField("AppIdList", GetAppIdList(), Field.Store.YES);
+
+            doc.Add(monitorIdList);
+            doc.Add(appIdList);
+
+            _writer.UpdateDocument(new Term("MonitorIdList"), doc);
         }
 
         public void CommitIfNeeded()
@@ -187,6 +308,7 @@ namespace GloutonLucene
 
         public void Dispose()
         {
+            UpdateIdListDoc();
             _writer.Dispose();
         }
     }
