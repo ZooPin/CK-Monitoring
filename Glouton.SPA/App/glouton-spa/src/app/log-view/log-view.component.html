@@ -7,15 +7,20 @@
   <div *ngIf="log.logLevel.indexOf('Debug') >= 0" class="timeline-badge debug"><i class="glyphicon glyphicon-list"></i></div>
   <div class="timeline-panel">
     <div class="timeline-heading">
-      <h4 class="timeline-title"> {{log.logLevel}}</h4>
-      <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i> {{log.logTime}}</small></p>
+      <div class="row">
+        <p><small class="text-muted col-md-11"><i class="glyphicon glyphicon-time"></i> {{log.logTime}}</small></p>
+        <button (click)="LogCollapsed = !LogCollapsed" type="button" class="btn btn-default col-md-1">
+          <i *ngIf="LogCollapsed" class="glyphicon glyphicon-plus"></i>
+          <i *ngIf="!LogCollapsed" class="glyphicon glyphicon-minus"></i>
+          </button>
+      </div>
     </div>
-    <div class="timeline-body">
+    <div [ngbCollapse]="LogCollapsed" class="timeline-body">
+      <h4 class="timeline-title"> {{log.logLevel}}</h4>
       <strong><p>{{log.text}}</p></strong>
       <p>{{log.sourceFileName}} (Line : {{log.lineNumber}})</p>
-
-      <button *ngIf="log.exception" type="button" class="btn btn-danger" (click)="ExceptionCollapsed = !ExceptionCollapsed"
-        [attr.aria-expanded]="!ExceptionCollapsed" aria-controls="exception">Exception</button>
+      <button *ngIf="log.exception" type="button" class="btn btn-danger" (click)="ExceptionCollapsed = !ExceptionCollapsed" [attr.aria-expanded]="!ExceptionCollapsed"
+        aria-controls="exception">Exception</button>
       <div *ngIf="log.exception" id="exception" [ngbCollapse]="ExceptionCollapsed">
         <div class="alert alert-danger" role="alert">
           <p><strong>{{log.exception.message}}</strong></p>

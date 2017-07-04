@@ -163,3 +163,8 @@ button.btn.btn-danger {
     margin-bottom: 7px;
     margin-top : 5px
 }
+
+.timeline-title {
+    margin-top: 10px;
+    margin-bottom: 5px; 
+}

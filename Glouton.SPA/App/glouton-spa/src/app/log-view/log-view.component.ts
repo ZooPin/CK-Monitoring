@@ -11,6 +11,7 @@ export class LogViewComponent implements OnInit {
 
   public ExceptionCollapsed : boolean = true;
   public InnerExceptionCollapsed : boolean = true;
+  public LogCollapsed: boolean = true;
 
   constructor() { }
 
