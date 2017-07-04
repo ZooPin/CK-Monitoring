@@ -85,5 +85,15 @@ namespace Glouton.SPA.Services
             }
             return result;
         }
+
+        static public ISet<string> GetMonitorIdList()
+        {
+            return new LuceneSearcher(new string[] {}).MonitorIdList;
+        }
+
+        static public ISet<string> GetAppIdList()
+        {
+            return new LuceneSearcher(new string[] { }).AppIdList;
+        }
     }
 }

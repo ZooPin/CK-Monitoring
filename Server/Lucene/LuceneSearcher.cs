@@ -19,6 +19,8 @@ namespace GloutonLucene
         QueryParser _exceptionParser;
         QueryParser _levelParser;
         Query _query;
+        private ISet<string> _monitorIdList;
+        private ISet<string> _appIdList;
 
         public LuceneSearcher(string[] fields)
         {
@@ -34,6 +36,11 @@ namespace GloutonLucene
                 "LogLevel",
                 new StandardAnalyzer(LuceneVersion.LUCENE_48));
         }
+
+
+        public ISet<string> MonitorIdList => _monitorIdList;
+
+        public ISet<string> AppIdList => _appIdList;
 
         public Query CreateQuery(string monitorID, string AppId, string[] fields, string[] logLevel, DateTime startingDate, DateTime endingDate, string searchQuery)
         {
@@ -89,6 +96,27 @@ namespace GloutonLucene
         {
             return _indexSearcher.Search(_exceptionParser.Parse("Outer"), numberDocsToReturn);
             return null;
+        }
+
+        private void InitializeIdList()
+        {
+            _monitorIdList = new HashSet<string>();
+            _appIdList = new HashSet<string>();
+            TopDocs hits = this.Search(new WildcardQuery(new Term("MonitorIdList", "*")));
+            foreach (ScoreDoc doc in hits.ScoreDocs)
+            {
+                Document document = this.GetDocument(doc);
+                string[] monitorIds = document.Get("MonitorIdList").Split(' ');
+                foreach (string id in monitorIds)
+                {
+                    if (!_monitorIdList.Contains(id)) _monitorIdList.Add(id);
+                }
+                string[] appIds = document.Get("AppIdList").Split(' ');
+                foreach (string id in appIds)
+                {
+                    if (!_appIdList.Contains(id)) _appIdList.Add(id);
+                }
+            }
         }
     }
 }

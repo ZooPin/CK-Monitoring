@@ -37,5 +37,17 @@ namespace Glouton.SPA.Controllers
             if (keyword == null) keyword = "*";
             return LuceneSearcherService.GetLogWithFilters(monitorId, appId, dateStart, dateEnd, fields, logLevel, keyword);
         }
+
+        [HttpGet("all/monitorid")]
+        public ISet<string> GetMonitorIdList()
+        {
+            return LuceneSearcherService.GetMonitorIdList();
+        }
+
+        [HttpGet("all/appid")]
+        public ISet<string> GetAppIdList()
+        {
+            return LuceneSearcherService.GetAppIdList();
+        }
     }
 }
