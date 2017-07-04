@@ -35,12 +35,15 @@ namespace GloutonLucene
             _levelParser = new QueryParser(LuceneVersion.LUCENE_48,
                 "LogLevel",
                 new StandardAnalyzer(LuceneVersion.LUCENE_48));
+            InitializeIdList();
         }
 
 
         public ISet<string> MonitorIdList => _monitorIdList;
 
         public ISet<string> AppIdList => _appIdList;
+
+        internal MultiFieldQueryParser QueryParser => _queryParser;
 
         public Query CreateQuery(string monitorID, string AppId, string[] fields, string[] logLevel, DateTime startingDate, DateTime endingDate, string searchQuery)
         {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System.Linq;
 using Lucene.Net.Index;
 using Lucene.Net.Store;
 using Lucene.Net.Search;
@@ -26,6 +27,11 @@ namespace GloutonLucene
         private ISet<string> _monitorIdList;
         private ISet<string> _appIdList;
 
+        /// <summary>
+        /// Creation of an indexer, it need to be disposed at the end 
+        /// to avoid the .lock file to remain in the targeted index
+        /// </summary>
+        /// <param name="indexDirectoryPath">The path where the indexer will store his indexed file</param>
         public LuceneIndexer (string indexDirectoryPath)
         {
             Lucene.Net.Store.Directory indexDirectory = FSDirectory.Open(new DirectoryInfo(indexDirectoryPath));
@@ -35,10 +41,13 @@ namespace GloutonLucene
             _lastDateTimeStamp = new DateTimeStamp(DateTime.UtcNow, 0);
             _numberOfFileToCommit = 0;
             _exceptionDepth = 0;
-            InitializeSearcher();
             InitializeIdList();
         }
 
+        /// <summary>
+        /// Try to initialize a searcher to get the list of monitor and app IDs
+        /// It can fail if the index is empty, in this case the searcher is useless
+        /// </summary>
         public void InitializeSearcher()
         {
             try
@@ -51,6 +60,12 @@ namespace GloutonLucene
             }
         }
 
+        /// <summary>
+        /// Create a Lucene document based on the log given
+        /// </summary>
+        /// <param name="log">The log to index</param>
+        /// <param name="appId">The app ID given by the Open Block</param>
+        /// <returns></returns>
         private Document GetLogDocument(IMulticastLogEntry log, int appId)
         {
             Document document = new Document();
@@ -114,6 +129,11 @@ namespace GloutonLucene
             return document;
         }
 
+        /// <summary>
+        /// Create and index a Lucene document based on the exception collected
+        /// </summary>
+        /// <param name="exception">The exception collected</param>
+        /// <returns></returns>
         Document GetExceptionDocuments(CKExceptionData exception)
         {
             Document document = new Document();
@@ -173,6 +193,11 @@ namespace GloutonLucene
             return document;
         }
 
+        /// <summary>
+        /// Create a lucene document with the Open Block
+        /// </summary>
+        /// <param name="openBlock">The open block of this indexer</param>
+        /// <returns></returns>
         private Document GetOpenBlockDocument(IOpen openBlock)
         {
             Document document = new Document();
@@ -190,6 +215,10 @@ namespace GloutonLucene
             return document;
         }
 
+        /// <summary>
+        /// Create a unique DateTimeStamp to identify each log
+        /// </summary>
+        /// <returns></returns>
         private DateTimeStamp CreateIndexTS()
         {
             DateTimeStamp IndexTS = new DateTimeStamp(_lastDateTimeStamp, DateTime.UtcNow);
@@ -197,16 +226,27 @@ namespace GloutonLucene
             return IndexTS;
         }
 
+        /// <summary>
+        /// Check if the Monitor ID and the App ID of a log is already known
+        /// if not, it add them to the known list
+        /// </summary>
+        /// <param name="log">The log to index</param>
+        /// <param name="appId">The app ID given by the Open Block</param>
         private void CheckIds(IMulticastLogEntry log, int appId)
         {
             if (!_monitorIdList.Contains(log.MonitorId.ToString())) _monitorIdList.Add(log.MonitorId.ToString());
             if (!_appIdList.Contains(appId.ToString())) _appIdList.Add(appId.ToString());
         }
 
+        /// <summary>
+        /// Initialize the Monitor ID list and the App ID list
+        /// If the Lucene document doesn't exist, it create it
+        /// </summary>
         private void InitializeIdList()
         {
             _monitorIdList = new HashSet<string>();
             _appIdList = new HashSet<string>();
+            InitializeSearcher();
             if (_searcher == null) return;
             TopDocs hits = _searcher.Search(new WildcardQuery(new Term("MonitorIdList", "*")));
             foreach (ScoreDoc doc in hits.ScoreDocs)
@@ -215,17 +255,22 @@ namespace GloutonLucene
                 string[] monitorIds = document.Get("MonitorIdList").Split(' ');
                 foreach (string id in monitorIds)
                 {
-                    if (!_monitorIdList.Contains(id)) _monitorIdList.Add(id);
+                    if (!_monitorIdList.Contains(id) && id != "" && id !=" ") _monitorIdList.Add(id);
                 }
                 string[] appIds = document.Get("AppIdList").Split(' ');
                 foreach (string id in appIds)
                 {
-                    if (!_appIdList.Contains(id)) _appIdList.Add(id);
+                    if (!_appIdList.Contains(id) && id != "" && id != " ") _appIdList.Add(id);
                 }
             }
             if (hits.TotalHits == 0) CreateIdListDoc();
         }
 
+        /// <summary>
+        /// Index the log document after creating it
+        /// </summary>
+        /// <param name="log">The log to index</param>
+        /// <param name="appId"></param>
         public void IndexLog(IMulticastLogEntry log, int appId)
         {
             CheckIds(log, appId);
@@ -235,6 +280,10 @@ namespace GloutonLucene
             CommitIfNeeded();
         }
 
+        /// <summary>
+        /// Index the open block of this indexer
+        /// </summary>
+        /// <param name="openBlock">The open block of this indexer</param>
         public void IndexOpenBlock(IOpen openBlock)
         {
             Document document = GetOpenBlockDocument(openBlock);
@@ -243,6 +292,10 @@ namespace GloutonLucene
             CommitIfNeeded();
         }
 
+        /// <summary>
+        /// Get the string containing the monitor ID list, might be big
+        /// </summary>
+        /// <returns>The string containing the monitor ID list</returns>
         private string GetMonitorIdList ()
         {
             StringBuilder builder = new StringBuilder();
@@ -254,6 +307,10 @@ namespace GloutonLucene
             return builder.ToString();
         }
 
+        /// <summary>
+        /// Get the string containing the app ID list
+        /// </summary>
+        /// <returns>the string containing the app ID list</returns>
         private string GetAppIdList()
         {
             StringBuilder builder = new StringBuilder();
@@ -264,6 +321,10 @@ namespace GloutonLucene
             }
             return builder.ToString();
         }
+
+        /// <summary>
+        /// Create the Lucene document that contain all Monitor and App ID list
+        /// </summary>
         public void CreateIdListDoc()
         {
             Document doc = new Document();
@@ -277,6 +338,9 @@ namespace GloutonLucene
             _writer.AddDocument(doc);
         }
 
+        /// <summary>
+        /// Update the Lucene document that contain all Monitor and App ID list
+        /// </summary>
         public void UpdateIdListDoc()
         {
             Document doc = new Document();
@@ -287,9 +351,15 @@ namespace GloutonLucene
             doc.Add(monitorIdList);
             doc.Add(appIdList);
 
-            _writer.UpdateDocument(new Term("MonitorIdList"), doc);
+            Term term = new Term("MonitorIdList", "*");
+            WildcardQuery query = new WildcardQuery(term);
+            _writer.DeleteDocuments(query);
+            _writer.AddDocument(doc);
         }
 
+        /// <summary>
+        /// Commit the change in the index if it's needed
+        /// </summary>
         public void CommitIfNeeded()
         {
             if (_numberOfFileToCommit <= 0) return;
@@ -301,11 +371,17 @@ namespace GloutonLucene
             }
         }
 
+        /// <summary>
+        /// Force the commit
+        /// </summary>
         public void ForceCommit()
         {
             _writer.Commit();
         }
 
+        /// <summary>
+        /// Dispose the indexer
+        /// </summary>
         public void Dispose()
         {
             UpdateIdListDoc();
