@@ -35,6 +35,7 @@ namespace GloutonLucene
             _levelParser = new QueryParser(LuceneVersion.LUCENE_48,
                 "LogLevel",
                 new StandardAnalyzer(LuceneVersion.LUCENE_48));
+            InitializeIdList();
         }
 
 
