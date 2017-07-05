@@ -32,6 +32,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Glouton.SPA", "Glouton.SPA\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Glouton.LogGenForm", "Glouton.LogGenForm\Glouton.LogGenForm.csproj", "{C6185601-A524-4C8B-B9F7-93681F8F8DD2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Glouton.CrashApplication", "Glouton.CrashApplication\Glouton.CrashApplication.csproj", "{C7E2A822-A8B1-4BC4-9EFE-2CB2F97A70F3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -70,6 +72,10 @@ Global
 		{C6185601-A524-4C8B-B9F7-93681F8F8DD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6185601-A524-4C8B-B9F7-93681F8F8DD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6185601-A524-4C8B-B9F7-93681F8F8DD2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7E2A822-A8B1-4BC4-9EFE-2CB2F97A70F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7E2A822-A8B1-4BC4-9EFE-2CB2F97A70F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7E2A822-A8B1-4BC4-9EFE-2CB2F97A70F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7E2A822-A8B1-4BC4-9EFE-2CB2F97A70F3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
