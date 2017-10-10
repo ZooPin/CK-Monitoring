@@ -92,13 +92,11 @@ namespace GloutonLucene
         public TopDocs GetAllLog(int numberDocsToReturn)
         {
             return _indexSearcher.Search(new WildcardQuery(new Term("LogLevel", "*")), numberDocsToReturn);
-            return null;
         }
 
         public TopDocs GetAllExceptions(int numberDocsToReturn)
         {
             return _indexSearcher.Search(_exceptionParser.Parse("Outer"), numberDocsToReturn);
-            return null;
         }
 
         private void InitializeIdList()
